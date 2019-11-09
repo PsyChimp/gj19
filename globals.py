@@ -1,4 +1,4 @@
-TITLE = "Untitled"
+TITLE = "Downgrade"
 
 TILE_SIZE = 32
 WIN_WIDTH_T = 20
@@ -7,7 +7,7 @@ WIN_WIDTH_PX = WIN_WIDTH_T * TILE_SIZE      # 640
 WIN_HEIGHT_PX = WIN_HEIGHT_T * TILE_SIZE    # 480
 
 PLAYER_MAX_HEALTH = 10
-PLAYER_SPEED = 200
+PLAYER_SPEED = 125
 PLAYER_ANIM_DELAY = 0.2
 
 ENEMY_MAX_HEALTH = 10
@@ -16,7 +16,7 @@ ENEMY_ATTACK_DELAY = 1.0
 
 ROOMS = [
     [
-        "WWWWWWWWWWWWWWWWWWWW",
+        "WWWDWWWWWWWWWWWWDWWW",
         "W..................W",
         "W..................W",
         "W..................W",
@@ -32,7 +32,7 @@ ROOMS = [
         "W..................W",
         "WWWWWWWWWWWWWWWWWWWW"],
     [
-        "WWWWWWWWWWWWWWWWWWWW",
+        "WWWDWWWWWWWWWWWWDWWW",
         "W..................W",
         "W..................W",
         "W..................W",
@@ -46,7 +46,7 @@ ROOMS = [
         "W..................W",
         "W..................W",
         "W..................W",
-        "WWWWWWWWWWWWWWWWWWWW"]]
+        "WWWDWWWWWWWWWWWWDWWW"]]
 
 BLACK = (0, 0, 0)
 GRAY = (128, 128, 128)

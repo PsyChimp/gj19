@@ -1,5 +1,6 @@
 import pygame
 from enum import Enum
+import random
 from pygame.locals import *
 
 from globals import *
@@ -18,7 +19,9 @@ class Enemy(object):
         self.radius = 16
         self.can_move_x = True
         self.can_move_y = True
-        self.state = self.AIState.Idle
+        self.state = self.AIState.Idle 
+        self.direction = pygame.math.Vector2(random.uniform(-1, 1), random.uniform(-1, 1))
+        
     def betweenRange(self, x, r1, r2):
         return (x >= r1) and (x <= r2)
     def update(self):
@@ -42,7 +45,6 @@ class Enemy(object):
             self.vel.y = self.game.player.pos[1] - self.pos[1]
         if not self.vel == (0,0):
             self.vel = self.vel.normalize() * (PLAYER_SPEED / 2)
-            
             
         # Calculate new position
         new_pos = self.pos + (self.vel * self.game.delta)
