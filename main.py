@@ -48,7 +48,8 @@ class Game(object):
             "wall_top": pygame.image.load("img/wall_top.png").convert(),
             "wall_bottom": pygame.image.load("img/wall_bottom.png").convert(),
             "wall_left": pygame.image.load("img/wall_left.png").convert(),
-            "wall_right": pygame.image.load("img/wall_right.png").convert()}
+            "wall_right": pygame.image.load("img/wall_right.png").convert(),
+            "wall_square": pygame.image.load("img/wall_square.png").convert()}
         self.player_img = None  # Replace with dict containing animation frames
 
     def handle_events(self):
@@ -63,6 +64,9 @@ class Game(object):
                     self.paused = not self.paused
                 elif e.key == K_F1:
                     self.debug = not self.debug
+                elif e.key == K_l:
+                    self.cur_room = (self.cur_room + 1) % len(ROOMS)
+                    self.load_room()
         self.player.handle_events()
 
     def update(self):
@@ -120,7 +124,7 @@ class Game(object):
                         elif x == WIN_WIDTH_T - 1:
                             img = self.room_tiles["wall_right"]
                         else:
-                            img = self.room_tiles["wall_center"]
+                            img = self.room_tiles["wall_square"]
                 elif tile == ".":
                     img = self.room_tiles["floor"]
                 self.background.blit(img, (x * TILE_SIZE, y * TILE_SIZE))
