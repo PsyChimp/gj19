@@ -70,3 +70,6 @@ class Player(object):
             #print("prev_dir =", self.prev_dir)
             self.game.screen.blit(
                 self.sprites[tuple(self.prev_dir)][2], (x, y))
+        if self.game.debug:
+            pygame.draw.rect(
+                self.game.screen, WHITE, (x, y, TILE_SIZE, TILE_SIZE), 1)
