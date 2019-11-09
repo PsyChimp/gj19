@@ -1,5 +1,6 @@
 import pygame
 from enum import Enum
+import random
 from pygame.locals import *
 
 from globals import *
@@ -18,7 +19,8 @@ class Enemy(object):
         self.radius = 16
         self.can_move_x = True
         self.can_move_y = True
-        self.state = self.AIState.Idle
+        self.state = self.AIState.Idle 
+        self.direction = pygame.math.Vector2(random.uniform(-1, 1), random.uniform(-1, 1))
     def update(self):
         # Update velocity
         path = self.get_path_to_tile(self.get_self_tile_pos(),self.get_player_tile_pos())
@@ -31,6 +33,12 @@ class Enemy(object):
         if self.vel.x != 0 or self.vel.y != 0:
             self.vel = self.vel.normalize() * PLAYER_SPEED
 
+        '''if self.state == self.AIState.Idle:
+            self.vel.x = self.direction.x
+            self.vel.y = self.direction.y
+        if self.vel.x != 0 or self.vel.y != 0:
+            self.vel = self.vel.normalize() * PLAYER_SPEED'''
+            
         # Calculate new position
         new_pos = self.pos + (self.vel * self.game.delta)
         new_xrect = Rect(
