@@ -4,6 +4,7 @@ import pygame
 from pygame.locals import *
 
 import player
+import enemy
 from globals import *
 
 class Game(object):
@@ -17,7 +18,7 @@ class Game(object):
         self.cur_room = 0
 
         self.player = None
-        self.enemies = None
+        self.enemies = []
         self.walls = None
 
         self.events = None
@@ -72,6 +73,8 @@ class Game(object):
         self.mbut = pygame.mouse.get_pressed()
 
         self.player.update()
+        for e in self.enemies:
+            e.update()
         if self.player.hp <= 0:
             self.playing = False
 
@@ -81,8 +84,8 @@ class Game(object):
             for w in self.walls:
                 pygame.draw.rect(self.screen, RED, w, 1)
         self.player.draw()
-        # for e in self.enemies:
-            # e.draw()
+        for e in self.enemies:
+            e.draw()
         pygame.display.flip()
 
     def draw_text(self, text, font, color, pos, align="topleft"):
@@ -132,7 +135,8 @@ class Game(object):
         self.cur_room = 0
         self.load_room()
         self.player = player.Player(self)
-
+        self.enemies.append(enemy.Enemy(self))
+        
     def run(self):
         self.playing = True
         # pygame.mixer.music.load("snd/level_theme.ogg")
@@ -143,7 +147,7 @@ class Game(object):
             if not self.paused:
                 self.update()
             self.draw()
-
+            
     def quit(self):
         pygame.quit()
         sys.exit()
@@ -180,7 +184,9 @@ class Game(object):
                 self.quit()
             elif e.type == KEYUP:
                 waiting = False
-
+    def get_tile_pos(self,pos):
+        tPos = (int(pos[0]/TILE_SIZE),int(pos[1]/TILE_SIZE))
+        return tPos
 if __name__ == "__main__":
     g = Game()
     while True:
