@@ -173,9 +173,11 @@ class Game(object):
         """Reset all game variables to their initial values."""
         self.cur_room = 0
         self.load_room()
+
         self.player = player.Player(self)
-        # self.enemies.append(enemy.Enemy(self))
+
         self.enemies = []
+        # self.enemies.append(enemy.Enemy(self))
         
     def run(self):
         self.playing = True
