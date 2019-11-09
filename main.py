@@ -190,7 +190,7 @@ class Game(object):
                 waiting = False
 
     def get_tile_pos(self, pos):
-        return (int(pos[0] / TILE_SIZE), int(pos[1] / TILE_SIZE))
+        return (pos.x // TILE_SIZE, pos.y // TILE_SIZE)
 
 if __name__ == "__main__":
     g = Game()
