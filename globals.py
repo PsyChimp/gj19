@@ -1,4 +1,4 @@
-TITLE = "Untitled"
+TITLE = "Downgrade"
 
 TILE_SIZE = 32
 WIN_WIDTH_T = 20
