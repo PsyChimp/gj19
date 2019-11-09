@@ -21,7 +21,7 @@ class Enemy(object):
         self.state = self.AIState.Idle
     def update(self):
         # Update velocity
-        path = self.find_path_to_player()
+        path = self.get_path_to_tile(self.get_self_tile_pos,self.get_player_tile_pos,[])
         #if(self.get_player_tile_pos() in path):
             #next = path[self.get_player_tile_pos()]
             #print(next)
@@ -90,7 +90,15 @@ class Enemy(object):
                 if(n in open):
                     neighbors.append(n)
         return neighbors
-        
+    def get_path_to_tile(self,current,end,path):
+        path.append(current)
+        to_add = self.get_open_neighbors(current)
+        for a in to_add:
+            if(a == end):
+                path.append(end)
+                return path
+            else:
+                return self.get_path_to_tile(a,end,path)
     def find_path_to_player(self):
         start = self.get_self_tile_pos()
         end = self.get_player_tile_pos()
