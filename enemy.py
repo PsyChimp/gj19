@@ -19,18 +19,31 @@ class Enemy(object):
         self.can_move_x = True
         self.can_move_y = True
         self.state = self.AIState.Idle
+    def betweenRange(self, x, r1, r2):
+        return (x >= r1) and (x <= r2)
     def update(self):
         # Update velocity
         path = self.get_path_to_tile(self.get_self_tile_pos(),self.get_player_tile_pos())
-        #if(self.get_player_tile_pos() in path):
-            #next = path[self.get_player_tile_pos()]
-            #print(next)
-        #print(path)
-        self.vel.x = (self.game.keys[K_RIGHT] - self.game.keys[K_LEFT])
-        self.vel.y = (self.game.keys[K_DOWN] - self.game.keys[K_UP])
-        if self.vel.x != 0 or self.vel.y != 0:
-            self.vel = self.vel.normalize() * PLAYER_SPEED
-
+        if(len(path) > 1):
+            d_point = None
+            for p in path:
+                p = (p[0] * TILE_SIZE, p[1] * TILE_SIZE)
+                q = (p[0] - self.pos[0], p[1] - self.pos[1])
+                q = q[0]*q[0] + q[1]*q[1]
+                if(q > 32):
+                    d_point = p
+            
+            if(d_point == None):
+                return
+            self.vel.x = d_point[0] - self.pos[0]
+            self.vel.y = d_point[1] - self.pos[1]
+        else:
+            self.vel.x = self.game.player.pos[0] - self.pos[0]
+            self.vel.y = self.game.player.pos[1] - self.pos[1]
+        if not self.vel == (0,0):
+            self.vel = self.vel.normalize() * (PLAYER_SPEED / 2)
+            
+            
         # Calculate new position
         new_pos = self.pos + (self.vel * self.game.delta)
         new_xrect = Rect(
@@ -68,27 +81,30 @@ class Enemy(object):
     def get_self_tile_pos(self):
         return self.game.get_tile_pos(self.pos)
     
-    def get_map_open_tile_pos(self):
-        open_spaces = []
+    def get_map_tile_pos(self):
+        closed = []
         map = ROOMS[self.game.cur_room]
         y = 0
         for row in map:
             x = 0
             for tile in row:
-                if(tile == '.'):
-                    open_spaces.append((x,y))
+                if(tile != '.'):
+                    closed.append((x,y))
                 x+=1
             y+=1
-        return open_spaces
+        for e in self.game.enemies:
+            p = e.get_self_tile_pos()
+            closed.append(p)
+        return closed
         
     def get_open_neighbors(self,pos):
-        open = self.get_map_open_tile_pos()
+        closed = self.get_map_tile_pos()
         neighbors = []
         for i in range(-1, 2):
             for j in range(-1,2):
-                if not (j == 0 and i == 0):
-                    n = (pos[0] - i, pos[1] - j)
-                    if(n in open):
+                if abs(j) != abs(i):
+                    n = (pos[0] + i, pos[1] + j)
+                    if n not in closed:
                         neighbors.append(n)
         return neighbors
         
@@ -111,7 +127,6 @@ class Enemy(object):
         while current != start:
             path.append(current)
             current = came_from[current]
-        path.append(start)
         path.reverse()
         return path
         
