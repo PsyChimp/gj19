@@ -37,21 +37,43 @@ class Game(object):
 
         # Load images, sounds, fonts, etc.
         self.room_tiles = {
-            "floor": pygame.image.load("img/floor.png").convert(),
-            "wall_top_left": pygame.image.load(
-                "img/wall_top_left.png").convert(),
-            "wall_top_right": pygame.image.load(
-                "img/wall_top_right.png").convert(),
-            "wall_bottom_left": pygame.image.load(
-                "img/wall_bottom_left.png").convert(),
-            "wall_bottom_right": pygame.image.load(
-                "img/wall_bottom_right.png").convert(),
-            "wall_top": pygame.image.load("img/wall_top.png").convert(),
-            "wall_bottom": pygame.image.load("img/wall_bottom.png").convert(),
-            "wall_left": pygame.image.load("img/wall_left.png").convert(),
-            "wall_right": pygame.image.load("img/wall_right.png").convert(),
-            "wall_square": pygame.image.load("img/wall_square.png").convert()}
-        self.player_img = None  # Replace with dict containing animation frames
+            "floor": pygame.image.load("img/level/floor.png").convert(),
+            "wall_top_left": pygame.image.load("img/level/wall_top_left.png").convert(),
+            "wall_top_right": pygame.image.load("img/level/wall_top_right.png").convert(),
+            "wall_bottom_left": pygame.image.load("img/level/wall_bottom_left.png").convert(),
+            "wall_bottom_right": pygame.image.load("img/level/wall_bottom_right.png").convert(),
+            "wall_top": pygame.image.load("img/level/wall_top.png").convert(),
+            "wall_bottom": pygame.image.load("img/level/wall_bottom.png").convert(),
+            "wall_left": pygame.image.load("img/level/wall_left.png").convert(),
+            "wall_right": pygame.image.load("img/level/wall_right.png").convert(),
+            "wall_square": pygame.image.load("img/level/wall_square.png").convert()}
+
+        player_walk_n = [
+            pygame.image.load("img/player/player_walk_n1.png").convert(),
+            pygame.image.load("img/player/player_walk_n2.png").convert()]
+        player_walk_ne = []
+        player_walk_e = [
+            pygame.image.load("img/player/player_walk_e1.png").convert(),
+            pygame.image.load("img/player/player_walk_e2.png").convert(),
+            pygame.image.load("img/player/player_walk_e3.png").convert(),
+            pygame.image.load("img/player/player_walk_e4.png").convert()]
+        player_walk_se = []
+        player_walk_s = [
+            pygame.image.load("img/player/player_walk_s1.png").convert(),
+            pygame.image.load("img/player/player_walk_s2.png").convert()]
+        player_walk_sw = []
+        player_walk_w = [
+            pygame.transform.flip(img, True, False) for img in player_walk_e]
+        player_walk_nw = []
+        self.player_imgs = {
+            ( 0, -1): player_walk_n,
+            ( 1, -1): player_walk_ne,
+            ( 1,  0): player_walk_e,
+            ( 1,  1): player_walk_se,
+            ( 0,  1): player_walk_s,
+            (-1,  1): player_walk_sw,
+            (-1,  0): player_walk_w,
+            (-1, -1): player_walk_nw}
 
     def handle_events(self):
         self.events = pygame.event.get()
