@@ -16,7 +16,7 @@ ENEMY_ATTACK_DELAY = 1.0
 
 ROOMS = [
     [
-        "WWWWWWWWWWWWWWWWWWWW",
+        "WWWDWWWWWWWWWWWWDWWW",
         "W..................W",
         "W....WWW...........W",
         "W....W.............W",
@@ -32,7 +32,7 @@ ROOMS = [
         "W..................W",
         "WWWWWWWWWWWWWWWWWWWW"],
     [
-        "WWWWWWWWWWWWWWWWWWWW",
+        "WWWDWWWWWWWWWWWWDWWW",
         "W..................W",
         "W..................W",
         "W..................W",
@@ -46,7 +46,7 @@ ROOMS = [
         "W..................W",
         "W..................W",
         "W..................W",
-        "WWWWWWWWWWWWWWWWWWWW"]]
+        "WWWDWWWWWWWWWWWWDWWW"]]
 
 BLACK = (0, 0, 0)
 GRAY = (128, 128, 128)

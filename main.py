@@ -21,6 +21,7 @@ class Game(object):
         self.player = None
         self.enemies = None
         self.walls = None
+        self.door = None
 
         self.events = None
         self.keys = None
@@ -50,7 +51,9 @@ class Game(object):
             "wall_bottom": pygame.image.load("img/level/wall_bottom.png").convert(),
             "wall_left": pygame.image.load("img/level/wall_left.png").convert(),
             "wall_right": pygame.image.load("img/level/wall_right.png").convert(),
-            "wall_square": pygame.image.load("img/level/wall_square.png").convert()}
+            "wall_square": pygame.image.load("img/level/wall_square.png").convert(),
+            "door_open": pygame.image.load("img/level/door_open.png").convert(),
+            "door_closed": pygame.image.load("img/level/door_closed.png").convert()}
 
         player_walk_n = [
             pygame.image.load("img/player/player_walk_n1.png").convert_alpha(),
@@ -100,9 +103,13 @@ class Game(object):
                     self.paused = not self.paused
                 elif e.key == K_F1:
                     self.debug = not self.debug
-                elif e.key == K_l:
+                elif e.key == K_r:
+                    # Skip to the next room
                     self.cur_room = (self.cur_room + 1) % len(ROOMS)
                     self.load_room()
+                elif e.key == K_c:
+                    # Delete all enemies
+                    self.enemies.clear()
         self.player.handle_events()
 
     def update(self):
@@ -163,6 +170,12 @@ class Game(object):
                             img = self.room_tiles["wall_right"]
                         else:
                             img = self.room_tiles["wall_square"]
+                elif tile == "D":
+                    if y == 0:
+                        img = self.room_tiles["door_closed"]
+                    elif y == WIN_HEIGHT_T - 1:
+                        img = pygame.transform.flip(
+                            self.room_tiles["door_closed"], False, True)
                 elif tile == ".":
                     img = self.room_tiles["floor"]
                 self.background.blit(img, (x * TILE_SIZE, y * TILE_SIZE))
