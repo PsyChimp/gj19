@@ -16,7 +16,7 @@ class Game(object):
         self.delta = 0.0
 
         self.player = None
-        self.enemies = None
+        self.enemies = []
         self.walls = []
 
         self.events = None
@@ -64,9 +64,9 @@ class Game(object):
 
     def draw(self):
         self.draw_level()
-
         self.player.draw()
-
+        for e in self.enemies:
+            e.draw()
         pygame.display.flip()
 
     def draw_level(self):
