@@ -2,8 +2,8 @@ import pygame
 from pygame.locals import *
 
 class Button(object):
-    def __init__(self, game, rect, colors, font, text, on_click, *args):
-        self.game = game
+    def __init__(self, rect, colors, font, text, on_click, *args):
+
         self.rect = rect
         self.colors = colors
         self.text_surf = font.render(text, True, colors["text"])
@@ -74,9 +74,6 @@ if __name__ == "__main__":
         screen.fill((255, 255, 255))
         for b in buttons:
             b.draw(screen)
-        for f in text:
-            f.draw(screen)
-
         pygame.display.flip()
 
     pygame.quit()
