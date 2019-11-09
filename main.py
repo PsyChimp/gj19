@@ -188,9 +188,10 @@ class Game(object):
                 self.quit()
             elif e.type == KEYUP:
                 waiting = False
-    def get_tile_pos(self,pos):
-        tPos = (int(pos[0]/TILE_SIZE),int(pos[1]/TILE_SIZE))
-        return tPos
+
+    def get_tile_pos(self, pos):
+        return (int(pos[0] / TILE_SIZE), int(pos[1] / TILE_SIZE))
+
 if __name__ == "__main__":
     g = Game()
     while True:
