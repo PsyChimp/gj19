@@ -25,7 +25,7 @@ class Enemy(object):
         #if(self.get_player_tile_pos() in path):
             #next = path[self.get_player_tile_pos()]
             #print(next)
-        # print(path)
+        #print(path)
         self.vel.x = (self.game.keys[K_RIGHT] - self.game.keys[K_LEFT])
         self.vel.y = (self.game.keys[K_DOWN] - self.game.keys[K_UP])
         if self.vel.x != 0 or self.vel.y != 0:
@@ -91,18 +91,27 @@ class Enemy(object):
                     if(n in open):
                         neighbors.append(n)
         return neighbors
+        
     def get_path_to_tile(self,start,end):
-        path = []
-        visited = []
-        to_check = Queue()
-        to_check.put(start)
-        while(not to_check.empty()):
-            current = to_check.get();
-            visited.append(current)
-            if(current == end):
+        frontier = Queue()
+        frontier.put(start)
+        came_from = {}
+        came_from[start] = None
+        while(not frontier.empty()):
+            current = frontier.get()
+            if current == end:
                 break
-            to_add = self.get_open_neighbors(current)
-            for a in to_add:
-                if a not in visited:
-                    to_check.put(a)
+            neighbors = self.get_open_neighbors(current)
+            for next in neighbors:
+                if next not in came_from:
+                    frontier.put(next)
+                    came_from[next] = current
+        current = end
+        path = []
+        while current != start:
+            path.append(current)
+            current = came_from[current]
+        path.append(start)
+        path.reverse()
         return path
+        

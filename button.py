@@ -42,9 +42,9 @@ if __name__ == "__main__":
 
     pygame.init()
 
-    screen = pygame.display.set_mode((512, 224))
-    font = pygame.font.SysFont("KenneyPixelRegular.ttf", 16)
-    font2 = pygame.font.SysFont("KenneyPixelRegular.ttf", 32)
+    screen = pygame.display.set_mode((518, 230))
+    background = pygame.image.load("./img/ui/Item Boxes.png")
+    font = pygame.font.SysFont("Small Fonts", 18)
     h = font.get_height()
 
     colors = {
@@ -72,6 +72,7 @@ if __name__ == "__main__":
             b.handle_event(e)
 
         screen.fill((255, 255, 255))
+        screen.blit(background,(0,0))
         for b in buttons:
             b.draw(screen)
         pygame.display.flip()
