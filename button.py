@@ -3,6 +3,7 @@ from pygame.locals import *
 
 class Button(object):
     def __init__(self, rect, colors, font, text, on_click, *args):
+
         self.rect = rect
         self.colors = colors
         self.text_surf = font.render(text, True, colors["text"])
@@ -32,14 +33,6 @@ class Button(object):
         pygame.draw.rect(surface, self.colors[self.state], self.rect)
         if self.state == "hovered":
             surface.blit(self.text_surf, self.text_pos)
-class Font(object):
-    def __init__(self, colors, font, text, pos):
-        self.colors = colors
-        self.text_surface = font.render(text, True, colors["text"])
-        dims = self.text_surface.get_size()
-        self.text_post = pos
-    def draw(self, surface):
-        surface.blit(self.text_surface, self.text_post)
 
 
 
@@ -50,8 +43,8 @@ if __name__ == "__main__":
     pygame.init()
 
     screen = pygame.display.set_mode((512, 224))
-    font = pygame.font.Font(None, 16)
-    font2 = pygame.font.Font(None, 32)
+    font = pygame.font.SysFont("KenneyPixelRegular.ttf", 16)
+    font2 = pygame.font.SysFont("KenneyPixelRegular.ttf", 32)
     h = font.get_height()
 
     colors = {
@@ -66,11 +59,6 @@ if __name__ == "__main__":
         Button(pygame.Rect(192, 64, 128, 128), colors, font, "Button 2", foo),
         Button(pygame.Rect(352, 64, 128, 128), colors, font, "Button 3", foo)]
 
-    text = [
-        Font(colors, font2, "1", (90, 32)),
-        Font(colors, font2, "2", (250, 32)),
-        Font(colors, font2, "3", (410, 32))
-    ]
 
     while True:
         e = pygame.event.poll()
@@ -86,9 +74,6 @@ if __name__ == "__main__":
         screen.fill((255, 255, 255))
         for b in buttons:
             b.draw(screen)
-        for f in text:
-            f.draw(screen)
-
         pygame.display.flip()
 
     pygame.quit()
