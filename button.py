@@ -30,7 +30,18 @@ class Button(object):
 
     def draw(self, surface):
         pygame.draw.rect(surface, self.colors[self.state], self.rect)
-        surface.blit(self.text_surf, self.text_pos)
+        if self.state == "hovered":
+            surface.blit(self.text_surf, self.text_pos)
+class Font(object):
+    def __init__(self, colors, font, text, pos):
+        self.colors = colors
+        self.text_surface = font.render(text, True, colors["text"])
+        dims = self.text_surface.get_size()
+        self.text_post = pos
+    def draw(self, surface):
+        surface.blit(self.text_surface, self.text_post)
+
+
 
 if __name__ == "__main__":
     def foo():
@@ -38,8 +49,9 @@ if __name__ == "__main__":
 
     pygame.init()
 
-    screen = pygame.display.set_mode((220, 130))
+    screen = pygame.display.set_mode((512, 224))
     font = pygame.font.Font(None, 16)
+    font2 = pygame.font.Font(None, 32)
     h = font.get_height()
 
     colors = {
@@ -47,11 +59,18 @@ if __name__ == "__main__":
         "hovered": (0, 128, 255),
         "clicked": (0, 102, 204),
         "disabled": (128, 128, 128),
-        "text": (255, 255, 255)}
+        "text": (0, 0, 0)}
 
     buttons = [
-        Button(pygame.Rect(10, 10, 200, 50), colors, font, "Button 1", foo),
-        Button(pygame.Rect(10, 70, 200, 50), colors, font, "Button 2", foo)]
+        Button(pygame.Rect(32, 64, 128, 128), colors, font, "Button 1", foo),
+        Button(pygame.Rect(192, 64, 128, 128), colors, font, "Button 2", foo),
+        Button(pygame.Rect(352, 64, 128, 128), colors, font, "Button 3", foo)]
+
+    text = [
+        Font(colors, font2, "1", (90, 32)),
+        Font(colors, font2, "2", (250, 32)),
+        Font(colors, font2, "3", (410, 32))
+    ]
 
     while True:
         e = pygame.event.poll()
@@ -67,6 +86,8 @@ if __name__ == "__main__":
         screen.fill((255, 255, 255))
         for b in buttons:
             b.draw(screen)
+        for f in text:
+            f.draw(screen)
 
         pygame.display.flip()
 
