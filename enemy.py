@@ -4,7 +4,7 @@ from pygame.locals import *
 
 from globals import *
 
-import queue
+from queue import *
 
 class Enemy(object):
     class AIState(Enum):
@@ -21,7 +21,7 @@ class Enemy(object):
         self.state = self.AIState.Idle
     def update(self):
         # Update velocity
-        path = self.get_path_to_tile(self.get_self_tile_pos,self.get_player_tile_pos,[])
+        path = self.get_path_to_tile(self.get_self_tile_pos(),self.get_player_tile_pos())
         #if(self.get_player_tile_pos() in path):
             #next = path[self.get_player_tile_pos()]
             #print(next)
@@ -84,34 +84,25 @@ class Enemy(object):
     def get_open_neighbors(self,pos):
         open = self.get_map_open_tile_pos()
         neighbors = []
-        for i in range(-1, 1):
-            for j in range(-1,1):
-                n = (pos[0] - i, pos[1] - j)
-                if(n in open):
-                    neighbors.append(n)
+        for i in range(-1, 2):
+            for j in range(-1,2):
+                if not (j == 0 and i == 0):
+                    n = (pos[0] - i, pos[1] - j)
+                    if(n in open):
+                        neighbors.append(n)
         return neighbors
-    def get_path_to_tile(self,current,end,path):
-        path.append(current)
-        to_add = self.get_open_neighbors(current)
-        for a in to_add:
-            if(a == end):
-                path.append(end)
-                return path
-            else:
-                return self.get_path_to_tile(a,end,path)
-    def find_path_to_player(self):
-        start = self.get_self_tile_pos()
-        end = self.get_player_tile_pos()
-        frontier = queue.Queue()
-        frontier.put(start)
-        came_from = {}
-        came_from[start] = None
-        while not frontier.empty():
-            current = frontier.get()
+    def get_path_to_tile(self,start,end):
+        path = []
+        visited = []
+        to_check = Queue()
+        to_check.put(start)
+        while(not to_check.empty()):
+            current = to_check.get();
+            visited.append(current)
             if(current == end):
                 break
-            for next in self.get_open_neighbors(current):
-                if next not in came_from:
-                    frontier.put(next)
-                    came_from[next] = current
-        return came_from
+            to_add = self.get_open_neighbors(current)
+            for a in to_add:
+                if a not in visited:
+                    to_check.put(a)
+        return path

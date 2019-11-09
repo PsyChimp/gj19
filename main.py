@@ -9,6 +9,7 @@ from globals import *
 
 class Game(object):
     def __init__(self):
+        sys.setrecursionlimit(2000)
         pygame.init()
         self.screen = pygame.display.set_mode((WIN_WIDTH_PX, WIN_HEIGHT_PX))
         pygame.display.set_caption(TITLE)
