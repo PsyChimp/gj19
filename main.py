@@ -10,7 +10,7 @@ from globals import *
 class Game(object):
     def __init__(self):
         pygame.init()
-        self.screen = pygame.display.set_mode((WIN_WIDTH_PX, WIN_HEIGHT_PX))
+        self.screen = pygame.display.set_mode((WIN_WIDTH_PX, WIN_HEIGHT_PX), FULLSCREEN)
         pygame.display.set_caption(TITLE)
         self.clock = pygame.time.Clock()
 
@@ -35,6 +35,9 @@ class Game(object):
         self.tmpfont32 = pygame.font.Font(None, 32)
         self.tmpfont64 = pygame.font.Font(None, 64)
 
+        self.missing_frame = pygame.Surface((TILE_SIZE, TILE_SIZE))
+        self.missing_frame.fill(MAGENTA)
+
         # Load images, sounds, fonts, etc.
         self.room_tiles = {
             "floor": pygame.image.load("img/level/floor.png").convert(),
@@ -49,22 +52,35 @@ class Game(object):
             "wall_square": pygame.image.load("img/level/wall_square.png").convert()}
 
         player_walk_n = [
-            pygame.image.load("img/player/player_walk_n1.png").convert(),
-            pygame.image.load("img/player/player_walk_n2.png").convert()]
-        player_walk_ne = []
+            pygame.image.load("img/player/player_walk_n1.png").convert_alpha(),
+            pygame.image.load("img/player/player_walk_n2.png").convert_alpha(),
+            self.missing_frame]
+        player_walk_ne = [
+            self.missing_frame,
+            self.missing_frame,
+            self.missing_frame]
         player_walk_e = [
-            pygame.image.load("img/player/player_walk_e1.png").convert(),
-            pygame.image.load("img/player/player_walk_e2.png").convert(),
-            pygame.image.load("img/player/player_walk_e3.png").convert(),
-            pygame.image.load("img/player/player_walk_e4.png").convert()]
-        player_walk_se = []
+            pygame.image.load("img/player/player_walk_e1.png").convert_alpha(),
+            pygame.image.load("img/player/player_walk_e2.png").convert_alpha(),
+            self.missing_frame]
+        player_walk_se = [
+            self.missing_frame,
+            self.missing_frame,
+            self.missing_frame]
         player_walk_s = [
-            pygame.image.load("img/player/player_walk_s1.png").convert(),
-            pygame.image.load("img/player/player_walk_s2.png").convert()]
-        player_walk_sw = []
+            pygame.image.load("img/player/player_walk_s1.png").convert_alpha(),
+            pygame.image.load("img/player/player_walk_s2.png").convert_alpha(),
+            pygame.image.load("img/player/player_idle_s.png").convert_alpha()]
+        player_walk_sw = [
+            self.missing_frame,
+            self.missing_frame,
+            self.missing_frame]
         player_walk_w = [
             pygame.transform.flip(img, True, False) for img in player_walk_e]
-        player_walk_nw = []
+        player_walk_nw = [
+            self.missing_frame,
+            self.missing_frame,
+            self.missing_frame]
         self.player_imgs = {
             ( 0, -1): player_walk_n,
             ( 1, -1): player_walk_ne,

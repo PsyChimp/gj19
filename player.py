@@ -8,11 +8,14 @@ class Player(object):
         self.game = game
         self.pos = pygame.math.Vector2(WIN_WIDTH_PX / 2, WIN_HEIGHT_PX / 2)
         self.dir = pygame.math.Vector2(0, 0)
+        self.prev_dir = pygame.math.Vector2(0, 1)
         self.sprites = self.game.player_imgs
         self.radius = 16
         self.hp = PLAYER_MAX_HEALTH
         self.can_move_x = True
         self.can_move_y = True
+        self.anim_timer = 0.0
+        self.cur_frame = 0
 
     def handle_events(self):
         pass
@@ -22,7 +25,14 @@ class Player(object):
         self.dir.x = (self.game.keys[K_d] - self.game.keys[K_a])
         self.dir.y = (self.game.keys[K_s] - self.game.keys[K_w])
         if self.dir.x != 0 or self.dir.y != 0:
-            self.dir = self.dir.normalize()
+            self.prev_dir = pygame.math.Vector2(self.dir)
+            self.anim_timer += self.game.delta
+            if self.anim_timer >= PLAYER_ANIM_DELAY:
+                num_frames = len(self.sprites[tuple(self.dir)])
+                self.cur_frame = (self.cur_frame + 1) % 2
+                self.anim_timer = 0.0
+        else:
+            self.cur_frame = 0
 
         # Calculate new position
         new_pos = self.pos + (self.dir * PLAYER_SPEED * self.game.delta)
@@ -53,4 +63,10 @@ class Player(object):
 
     def draw(self):
         x, y = self.pos.x - 16, self.pos.y - 16
-        pygame.draw.rect(self.game.screen, GREEN, (x, y, 32, 32))
+        if self.dir.x != 0 or self.dir.y != 0:
+            self.game.screen.blit(
+                self.sprites[tuple(self.dir)][self.cur_frame], (x, y))
+        else:
+            #print("prev_dir =", self.prev_dir)
+            self.game.screen.blit(
+                self.sprites[tuple(self.prev_dir)][2], (x, y))

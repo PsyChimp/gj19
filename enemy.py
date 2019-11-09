@@ -25,7 +25,7 @@ class Enemy(object):
         #if(self.get_player_tile_pos() in path):
             #next = path[self.get_player_tile_pos()]
             #print(next)
-        print(path)
+        # print(path)
         self.vel.x = (self.game.keys[K_RIGHT] - self.game.keys[K_LEFT])
         self.vel.y = (self.game.keys[K_DOWN] - self.game.keys[K_UP])
         if self.vel.x != 0 or self.vel.y != 0:
