@@ -9,15 +9,16 @@ from globals import *
 class Game(object):
     def __init__(self):
         pygame.init()
-        self.screen = pygame.display.set_mode((WIN_WIDTH, WIN_HEIGHT))
+        self.screen = pygame.display.set_mode((WIN_WIDTH_PX, WIN_HEIGHT_PX))
         pygame.display.set_caption(TITLE)
         self.clock = pygame.time.Clock()
 
         self.delta = 0.0
+        self.cur_room = 0
 
         self.player = None
-        self.enemies = []
-        self.walls = []
+        self.enemies = None
+        self.walls = None
 
         self.events = None
         self.keys = None
@@ -34,9 +35,21 @@ class Game(object):
         self.tmpfont64 = pygame.font.Font(None, 64)
 
         # Load images, sounds, fonts, etc.
-        self.wall_img = pygame.image.load("img/wall.png").convert()
-        self.floor_img = pygame.image.load("img/floor.png").convert()
-        self.player_img = None
+        self.room_tiles = {
+            "floor": pygame.image.load("img/floor.png").convert(),
+            "wall_top_left": pygame.image.load(
+                "img/wall_top_left.png").convert(),
+            "wall_top_right": pygame.image.load(
+                "img/wall_top_right.png").convert(),
+            "wall_bottom_left": pygame.image.load(
+                "img/wall_bottom_left.png").convert(),
+            "wall_bottom_right": pygame.image.load(
+                "img/wall_bottom_right.png").convert(),
+            "wall_top": pygame.image.load("img/wall_top.png").convert(),
+            "wall_bottom": pygame.image.load("img/wall_bottom.png").convert(),
+            "wall_left": pygame.image.load("img/wall_left.png").convert(),
+            "wall_right": pygame.image.load("img/wall_right.png").convert()}
+        self.player_img = None  # Replace with dict containing animation frames
 
     def handle_events(self):
         self.events = pygame.event.get()
@@ -63,37 +76,61 @@ class Game(object):
             self.playing = False
 
     def draw(self):
-        self.draw_level()
+        self.screen.blit(self.background, (0, 0))
+        if self.debug:
+            for w in self.walls:
+                pygame.draw.rect(self.screen, RED, w, 1)
         self.player.draw()
-        for e in self.enemies:
-            e.draw()
+        # for e in self.enemies:
+            # e.draw()
         pygame.display.flip()
-
-    def draw_level(self):
-        y = 0
-        for row in LEVEL_1:
-            x = 0
-            for tile in row:
-                if tile == "@":
-                    # Draw a wall tile
-                    img = self.wall_img
-                elif tile == ".":
-                    # Draw a floor tile
-                    img = self.floor_img
-                self.screen.blit(img, (x, y))
-                if self.debug:
-                    pygame.draw.rect(
-                        self.screen, WHITE, (x, y, TILE_SIZE, TILE_SIZE), 1)
-                x += TILE_SIZE
-            y += TILE_SIZE
 
     def draw_text(self, text, font, color, pos, align="topleft"):
         text_surf = font.render(text, True, color)
         text_rect = text_surf.get_rect(**{align: pos})
         self.screen.blit(text_surf, text_rect)
 
+    def load_room(self):
+        self.background = pygame.Surface((WIN_WIDTH_PX, WIN_HEIGHT_PX))
+        self.walls = []
+        y = 0
+        for row in ROOMS[self.cur_room]:
+            x = 0
+            for tile in row:
+                if tile == "W":
+                    self.walls.append(Rect(
+                        x * TILE_SIZE, y * TILE_SIZE, TILE_SIZE, TILE_SIZE))
+                    if y == 0:
+                        if x == 0:
+                            img = self.room_tiles["wall_top_left"]
+                        elif x == WIN_WIDTH_T - 1:
+                            img = self.room_tiles["wall_top_right"]
+                        else:
+                            img = self.room_tiles["wall_top"]
+                    elif y == WIN_HEIGHT_T - 1:
+                        if x == 0:
+                            img = self.room_tiles["wall_bottom_left"]
+                        elif x == WIN_WIDTH_T - 1:
+                            img = self.room_tiles["wall_bottom_right"]
+                        else:
+                            img = self.room_tiles["wall_bottom"]
+                    else:
+                        if x == 0:
+                            img = self.room_tiles["wall_left"]
+                        elif x == WIN_WIDTH_T - 1:
+                            img = self.room_tiles["wall_right"]
+                        else:
+                            img = self.room_tiles["wall_center"]
+                elif tile == ".":
+                    img = self.room_tiles["floor"]
+                self.background.blit(img, (x * TILE_SIZE, y * TILE_SIZE))
+                x += 1
+            y += 1
+
     def new(self):
         """Reset all game variables to their initial values."""
+        self.cur_room = 0
+        self.load_room()
         self.player = player.Player(self)
 
     def run(self):
@@ -117,7 +154,7 @@ class Game(object):
         self.screen.fill(BLUE)
         self.draw_text(
             "Press any key to begin!", self.tmpfont64, WHITE,
-            (WIN_WIDTH / 2, WIN_HEIGHT / 2), "center")
+            (WIN_WIDTH_PX / 2, WIN_HEIGHT_PX / 2), "center")
         pygame.display.flip()
         self.wait_for_key()
 
@@ -127,7 +164,7 @@ class Game(object):
         self.screen.fill(BLUE)
         self.draw_text(
             "Game over!", self.tmpfont64, WHITE,
-            (WIN_WIDTH / 2, WIN_HEIGHT / 2), "center")
+            (WIN_WIDTH_PX / 2, WIN_HEIGHT_PX / 2), "center")
         pygame.display.flip()
         self.wait_for_key()
 
