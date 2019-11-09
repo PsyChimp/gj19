@@ -7,8 +7,8 @@ class Player(object):
     def __init__(self, game):
         self.game = game
         self.pos = pygame.math.Vector2(WIN_WIDTH_PX / 2, WIN_HEIGHT_PX / 2)
-        self.vel = pygame.math.Vector2(0, 0)
-        self.img = self.game.player_img
+        self.dir = pygame.math.Vector2(0, 0)
+        self.sprites = self.game.player_imgs
         self.radius = 16
         self.hp = PLAYER_MAX_HEALTH
         self.can_move_x = True
@@ -19,13 +19,13 @@ class Player(object):
 
     def update(self):
         # Update velocity
-        self.vel.x = (self.game.keys[K_d] - self.game.keys[K_a])
-        self.vel.y = (self.game.keys[K_s] - self.game.keys[K_w])
-        if self.vel.x != 0 or self.vel.y != 0:
-            self.vel = self.vel.normalize() * PLAYER_SPEED
+        self.dir.x = (self.game.keys[K_d] - self.game.keys[K_a])
+        self.dir.y = (self.game.keys[K_s] - self.game.keys[K_w])
+        if self.dir.x != 0 or self.dir.y != 0:
+            self.dir = self.dir.normalize()
 
         # Calculate new position
-        new_pos = self.pos + (self.vel * self.game.delta)
+        new_pos = self.pos + (self.dir * PLAYER_SPEED * self.game.delta)
         new_xrect = Rect(
             new_pos.x - self.radius,
             self.pos.y - self.radius,
