@@ -24,6 +24,15 @@ class Bullet(object):
                 e.hp -= 1
                 return False
         return True
-
+    def enemyUpdate(self):
+        self.pos += self.dir * BULLET_SPEED * self.game.delta
+        self.rect.center = self.pos
+        for t in self.game.obstacles:
+            if t.rect.colliderect(self.rect):
+                return False
+        if self.pos.distance_squared_to(self.game.player.pos) <= (self.radius + self.game.player.radius) ** 2:
+            self.game.player.hp -= 1
+            return False
+        return True
     def draw(self):
         self.game.screen.blit(self.img, self.pos - (10, 10))
