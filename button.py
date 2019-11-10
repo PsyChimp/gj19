@@ -41,7 +41,11 @@ class Button(object):
 
 if __name__ == "__main__":
     def foo():
-        print("bar")
+        print(text1)
+    def foo1():
+        print(text2)
+    def foo2():
+        print(text3)
 
 
     pygame.init()
@@ -61,6 +65,7 @@ if __name__ == "__main__":
     icon10 = pygame.image.load("./img/icons/plus_enemy_health_big.png")
     icon11 = pygame.image.load("./img/icons/plus_enemy_speed_big.png")
     icon12 = pygame.image.load("./img/icons/no_dash_big.png")
+    icon13 = pygame.image.load("./img/icons/reverse_controls_big.png")
     font = pygame.font.Font("./font/Kenney Pixel.ttf", 32)
     font2 = pygame.font.Font("./font/Kenney Pixel.ttf", 64)
     h = font.get_height()
@@ -71,21 +76,21 @@ if __name__ == "__main__":
         "clicked": (0, 102, 204),
         "disabled": (128, 128, 128),
         "text": (255, 255, 255)}
-    i = random.randint(0, 11)
-    j = random.randint(0, 11)
-    w = random.randint(0, 11)
+    i = random.randint(0, 12)
+    j = random.randint(0, 12)
+    w = random.randint(0, 12)
     if i == j:
         while j == w or i == j or i == w:
-            i = random.randint(0, 11)
-            j = random.randint(0, 11)
+            i = random.randint(0, 12)
+            j = random.randint(0, 12)
     elif i == w:
         while j == w or i == j or i == w:
-            i = random.randint(0, 11)
-            w = random.randint(0, 11)
+            i = random.randint(0, 12)
+            w = random.randint(0, 12)
     elif j == w:
         while j == w or i == j or i == w:
-            j = random.randint(0, 11)
-            w = random.randint(0, 11)
+            j = random.randint(0, 12)
+            w = random.randint(0, 12)
     numbers = [
         i, j, w
     ]
@@ -113,6 +118,8 @@ if __name__ == "__main__":
         text1 = "Enemy Spd up"
     elif numbers[0] == 11:
         text1 = "No Dash"
+    elif numbers[0] == 12:
+        text1 = "Reverse Con"
     else:
         text1 = "error"
     if numbers[1] == 0:
@@ -139,6 +146,8 @@ if __name__ == "__main__":
         text2 = "Enemy Spd up"
     elif numbers[1] == 11:
         text2 = "No Dash"
+    elif numbers[1] == 12:
+        text2 = "Reverse Con"
     else:
         text2 = "error"
     if numbers[2] == 0:
@@ -165,16 +174,18 @@ if __name__ == "__main__":
         text3 = "Enemy Spd up"
     elif numbers[2] == 11:
         text3 = "No Dash"
+    elif numbers[2] == 12:
+        text3 = "Reverse Con"
     else:
         text3 = "error"
     text4 = font2.render("Choose Your Fate", True, (255, 255, 255))
     icons = [
-        icon1, icon2, icon3, icon4, icon5, icon6, icon7, icon8, icon9, icon10, icon11, icon12
+        icon1, icon2, icon3, icon4, icon5, icon6, icon7, icon8, icon9, icon10, icon11, icon12, icon13
     ]
     buttons = [
         Button(pygame.Rect(32, 64, 128, 128), colors, font, text1, foo),
-        Button(pygame.Rect(192, 64, 128, 128), colors, font, text2, foo),
-        Button(pygame.Rect(352, 64, 128, 128), colors, font, text3, foo)]
+        Button(pygame.Rect(192, 64, 128, 128), colors, font, text2, foo1),
+        Button(pygame.Rect(352, 64, 128, 128), colors, font, text3, foo2)]
 
     while True:
         e = pygame.event.poll()

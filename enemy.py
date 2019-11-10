@@ -8,9 +8,6 @@ from globals import *
 from queue import *
 
 class Enemy(object):
-    class AIState(Enum):
-        Idle = 0
-        Aggro = 1
     def __init__(self,game):
         self.game = game
         self.pos = pygame.math.Vector2(WIN_WIDTH_PX / 2, WIN_HEIGHT_PX / 2)
@@ -19,32 +16,35 @@ class Enemy(object):
         self.radius = 16
         self.can_move_x = True
         self.can_move_y = True
-        self.state = self.AIState.Idle 
         self.direction = pygame.math.Vector2(random.uniform(-1, 1), random.uniform(-1, 1))
+        self.prev_direction = pygame.math.Vector2(0, 1)
         
     def betweenRange(self, x, r1, r2):
         return (x >= r1) and (x <= r2)
     def update(self):
         # Update velocity
         path = self.get_path_to_tile(self.get_self_tile_pos(),self.get_player_tile_pos())
-        if(len(path) > 1):
-            d_point = None
-            for p in path:
-                p = (p[0] * TILE_SIZE, p[1] * TILE_SIZE)
-                q = (p[0] - self.pos[0], p[1] - self.pos[1])
-                q = q[0]*q[0] + q[1]*q[1]
-                if(q > 32):
-                    d_point = p
-            
-            if(d_point == None):
-                return
-            self.vel.x = d_point[0] - self.pos[0]
-            self.vel.y = d_point[1] - self.pos[1]
-        else:
-            self.vel.x = self.game.player.pos[0] - self.pos[0]
-            self.vel.y = self.game.player.pos[1] - self.pos[1]
-        if not self.vel == (0,0):
+        for i in range(len(path)):
+            path[i] = pygame.math.Vector2((path[i][0] * TILE_SIZE) - (TILE_SIZE/2),
+            (path[i][1] * TILE_SIZE) - (TILE_SIZE/2))
+        print(path)
+        if(len(path) < 1):
+            return
+        d_point = None
+        for p in path:
+            d_point = p
+            self.vel = d_point - self.pos
+            if(self.vel.magnitude() >= TILE_SIZE):
+                break
+        #print(self.vel)
+        if self.vel.magnitude() > 1:
             self.vel = self.vel.normalize() * (PLAYER_SPEED / 2)
+        
+        self.direction.x = (self.game.player.pos[0] - self.pos[0])
+        self.direction.y = (self.game.player.pos[1] - self.pos[1])
+        if self.direction.x != 0 or self.direction.y != 0:
+            self.prev_direction = pygame.math.Vector2(self.direction)
+        print(self.direction)
             
         # Calculate new position
         new_pos = self.pos + (self.vel * self.game.delta)
