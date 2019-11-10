@@ -20,7 +20,7 @@ class Enemy(object):
         self.can_move_x = True
         self.can_move_y = True
         self.state = self.AIState.Idle 
-        self.direction = pygame.math.Vector2(random.uniform(-1, 1), random.uniform(-1, 1))
+        self.random_dir = pygame.math.Vector2(random.uniform(-1, 1), random.uniform(-1, 1))
     def update(self):
         # Update velocity
         path = self.get_path_to_tile(self.get_self_tile_pos(),self.get_player_tile_pos())
@@ -28,16 +28,22 @@ class Enemy(object):
             #next = path[self.get_player_tile_pos()]
             #print(next)
         #print(path)
-        self.vel.x = (self.game.keys[K_RIGHT] - self.game.keys[K_LEFT])
+        '''self.vel.x = (self.game.keys[K_RIGHT] - self.game.keys[K_LEFT])
         self.vel.y = (self.game.keys[K_DOWN] - self.game.keys[K_UP])
         if self.vel.x != 0 or self.vel.y != 0:
-            self.vel = self.vel.normalize() * PLAYER_SPEED
-
-        '''if self.state == self.AIState.Idle:
-            self.vel.x = self.direction.x
-            self.vel.y = self.direction.y
-        if self.vel.x != 0 or self.vel.y != 0:
             self.vel = self.vel.normalize() * PLAYER_SPEED'''
+        if len(path) < 5:
+            self.state = self.AIstate.Aggro
+            
+        if self.state == self.AIState.Idle:
+            self.vel.x = self.random_dir.x
+            self.vel.y = self.random_dir.y
+        else:
+            self.vel.x = 0
+            self.vel.y = 0
+            
+        if self.vel.x != 0 or self.vel.y != 0:
+            self.vel = self.vel.normalize() * PLAYER_SPEED
             
         # Calculate new position
         new_pos = self.pos + (self.vel * self.game.delta)
