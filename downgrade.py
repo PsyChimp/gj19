@@ -10,6 +10,6 @@ class Downgrade(object):
     def apply(self):
         return NotImplementedError
 
-class OneHPDowngrade(Downgrade):
+class OneHpDowngrade(Downgrade):
     def apply(self):
         self.game.player.hp = 1
