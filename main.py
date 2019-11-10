@@ -17,11 +17,12 @@ class Game(object):
 
         self.delta = 0.0
         self.cur_room = 0
+        self.doors_open = False
 
         self.player = None
         self.enemies = None
         self.tiles = None
-        self.door = None
+        self.obstacles = None
 
         self.events = None
         self.keys = None
@@ -105,7 +106,7 @@ class Game(object):
                     self.debug = not self.debug
                 elif e.key == K_r:
                     # Skip to the next room
-                    self.cur_room = (self.cur_room + 1) % len(ROOMS)
+                    self.cur_room += 1
                     self.load_room()
                 elif e.key == K_c:
                     # Delete all enemies
@@ -124,31 +125,30 @@ class Game(object):
 
         for e in self.enemies:
             e.update()
-        if len(self.enemies) == 0:
-            # Room has been cleared
-            
+        if not self.doors_open and len(self.enemies) == 0:
+            self.obstacles[:] = [t for t in self.obstacles if t.type != "door"]
+            for i, t in enumerate(self.tiles):
+                if i < 20 and t.type == "door":
+                    t.img = self.room_tiles["door_open"]
+            self.doors_open = True
+
+        # Check for player entering a door
+        if self.player.pos.y < TILE_SIZE:
+            self.cur_room += 1
+            self.load_room()
 
     def draw(self):
-        # self.screen.blit(self.background, (0, 0))
-        # if self.debug:
-            # for w in self.walls:
-                # pygame.draw.rect(self.screen, RED, w, 1)
-        # # Draw open doors
-        # if self.room_clear:
-            # self.background.blit(self.room_tiles["door_open"], (96, 0))
-            # self.background.blit(self.room_tiles["door_open"], (512, 0))
-
-        # self.player.draw()
-
-        # for e in self.enemies:
-            # e.draw()
-
-        # pygame.display.flip()
-
         for t in self.tiles:
             t.draw()
             if self.debug:
                 pygame.draw.rect(self.screen, RED, t.rect, 1)
+
+        self.player.draw()
+
+        for e in self.enemies:
+            e.draw()
+
+        pygame.display.flip()
 
     def draw_text(self, text, font, color, pos, align="topleft"):
         text_surf = font.render(text, True, color)
@@ -156,13 +156,17 @@ class Game(object):
         self.screen.blit(text_surf, text_rect)
 
     def load_room(self):
+        if self.cur_room >= len(ROOMS):
+            self.playing = False
+            return
         self.tiles = []
+        self.obstacles = []
         y = 0
-        for row in ROOMS[self.cur_room]:
+        for cur_row in ROOMS[self.cur_room]:
             x = 0
-            for tile in row:
+            for cur_tile in cur_row:
                 rect = Rect(x * TILE_SIZE, y * TILE_SIZE, TILE_SIZE, TILE_SIZE)
-                if tile == "@":
+                if cur_tile == "@":
                     type = "wall"
                     if y == 0:
                         if x == 0:
@@ -185,29 +189,33 @@ class Game(object):
                             img = self.room_tiles["wall_right"]
                         else:
                             img = self.room_tiles["wall_square"]
-                elif tile == "_":
+                elif cur_tile == "_":
                     type = "door"
                     if y == 0:
                         img = self.room_tiles["door_closed"]
                     elif y == WIN_HEIGHT_T - 1:
                         img = pygame.transform.flip(
                             self.room_tiles["door_closed"], False, True)
-                elif tile == ".":
+                elif cur_tile == ".":
                     type = "floor"
                     img = self.room_tiles["floor"]
-                self.tiles.append(tile.Tile(self, type, rect, img)
+                self.tiles.append(tile.Tile(self, type, rect, img))
                 x += 1
             y += 1
+        self.obstacles[:] = [
+            t for t in self.tiles if t.type == "wall" or t.type == "door"]
+        self.player.pos = pygame.math.Vector2(PLAYER_SPAWN)
+        self.doors_open = False
 
     def new(self):
         """Reset all game variables to their initial values."""
+        self.player = player.Player(self)
+
         self.cur_room = 0
         self.load_room()
 
-        self.player = player.Player(self)
-
         self.enemies = []
-        self.enemies.append(enemy.Enemy(self))
+        # self.enemies.append(enemy.Enemy(self))
         
     def run(self):
         self.playing = True
@@ -235,13 +243,12 @@ class Game(object):
         self.wait_for_key()
 
     def show_game_over_screen(self):
-        # pygame.mixer.music.load("snd/game_over_theme.ogg")
-        # pygame.mixer.music.play(-1)
         self.screen.fill(BLUE)
         self.draw_text(
             "Game over!", self.tmpfont64, WHITE,
             (WIN_WIDTH_PX / 2, WIN_HEIGHT_PX / 2), "center")
         pygame.display.flip()
+        pygame.time.wait(3000)
         self.wait_for_key()
 
     def wait_for_key(self):
@@ -267,3 +274,4 @@ if __name__ == "__main__":
         g.new()
         g.run()
         g.show_game_over_screen()
+        g.quit()

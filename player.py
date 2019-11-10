@@ -6,7 +6,7 @@ from globals import *
 class Player(object):
     def __init__(self, game):
         self.game = game
-        self.pos = pygame.math.Vector2(WIN_WIDTH_PX / 2, WIN_HEIGHT_PX / 2)
+        self.pos = pygame.math.Vector2(PLAYER_SPAWN)
         self.dir = pygame.math.Vector2(0, 0)
         self.prev_dir = pygame.math.Vector2(0, 1)
         self.sprites = self.game.player_imgs
@@ -50,10 +50,10 @@ class Player(object):
             self.radius * 2)
 
         # Check for collisions with walls
-        for w in self.game.walls:
-            if self.can_move_x and new_xrect.colliderect(w):
+        for tile in self.game.obstacles:
+            if self.can_move_x and new_xrect.colliderect(tile.rect):
                 self.can_move_x = False
-            if self.can_move_y and new_yrect.colliderect(w):
+            if self.can_move_y and new_yrect.colliderect(tile.rect):
                 self.can_move_y = False
 
         # Update position

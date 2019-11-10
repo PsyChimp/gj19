@@ -5,6 +5,7 @@ from globals import *
 
 class Tile(object):
     def __init__(self, game, type, rect, img):
+        self.game = game
         self.type = type
         self.rect = rect
         self.img = img
