@@ -151,6 +151,11 @@ class Game(object):
         self.missing_frame.fill(Game.MAGENTA)
 
         # Load images, sounds, fonts, etc.
+
+        # SCREENS
+        self.title_screen = pygame.image.load("img/screens/Title Screen.png").convert()
+        self.win_screen = pygame.image.load("img/screens/win.png").convert()
+
         # ROOM TILES
         self.room_tiles = {
             "floor": pygame.image.load("img/level/floor.png").convert(),
@@ -415,6 +420,8 @@ class Game(object):
         if self.cur_room == 3:
             # Boss room
             self.boss = boss.Boss(self)
+            pygame.mixer.music.load("snd/boss theme.ogg")
+            pygame.mixer.music.play(-1)
         self.player.bullets.clear()
         self.tiles = []
         self.obstacles = []
@@ -476,7 +483,7 @@ class Game(object):
         """Reset all game variables to their initial values."""
         self.player = player.Player(self)
 
-        self.cur_room = 3
+        self.cur_room = 0
         self.enemies = []
         self.explo = []
         
@@ -484,8 +491,8 @@ class Game(object):
 
     def run(self):
         self.playing = True
-        # pygame.mixer.music.load("snd/level_theme.ogg")
-        # pygame.mixer.music.play(-1)
+        pygame.mixer.music.load("snd/stage 1.ogg")
+        pygame.mixer.music.play(-1)
         while self.playing:
             self.delta = self.clock.tick() / 1000.0
             self.handle_events()
@@ -498,20 +505,12 @@ class Game(object):
         sys.exit()
 
     def show_start_screen(self):
-        # pygame.mixer.music.load("snd/start_theme.ogg")
-        # pygame.mixer.music.play(-1)
-        self.screen.fill(Game.BLUE)
-        self.draw_text(
-            "Press any key to begin!", self.tmpfont64, Game.WHITE,
-            (Game.WIN_WIDTH_PX / 2, Game.WIN_HEIGHT_PX / 2), "center")
+        self.screen.blit(self.title_screen, (0, 0))
         pygame.display.flip()
         self.wait_for_key()
 
     def show_win_screen(self):
-        self.screen.fill(Game.BLUE)
-        self.draw_text(
-            "You win!", self.tmpfont64, Game.WHITE,
-            (Game.WIN_WIDTH_PX / 2, Game.WIN_HEIGHT_PX / 2), "center")
+        self.screen.blit(self.win_screen, (0, 0))
         pygame.display.flip()
         pygame.time.wait(3000)
         self.wait_for_key()

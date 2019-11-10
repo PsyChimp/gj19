@@ -24,7 +24,7 @@ class Bullet(object):
             if self.pos.distance_squared_to(e.pos) <= (self.radius + e.radius) ** 2:
                 e.hp -= 1
                 return False
-        if self.from_player:
+        if self.from_player and self.game.boss is not None:
             if self.pos.distance_squared_to(self.game.boss.head_pos) <= (self.radius + self.game.boss.head_radius) ** 2:
                 self.game.boss.head_hp -= 1
                 return False

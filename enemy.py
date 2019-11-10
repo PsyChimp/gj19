@@ -12,8 +12,8 @@ import bullet
 class Enemy(object):
     def __init__(self,game,tile_pos,turret = False):
         self.game = game
-        self.pos = pygame.math.Vector2((tile_pos[0] * Game.TILE_SIZE) + (Game.TILE_SIZE/2),
-        (tile_pos[1] * Game.TILE_SIZE) + (Game.TILE_SIZE/2))
+        self.pos = pygame.math.Vector2((tile_pos[0] * self.game.TILE_SIZE) + (self.game.TILE_SIZE/2),
+        (tile_pos[1] * self.game.TILE_SIZE) + (self.game.TILE_SIZE/2))
         self.vel = pygame.math.Vector2(0, 0)
         self.radius = 10
         self.can_move_x = True
@@ -27,7 +27,7 @@ class Enemy(object):
         self.player_pos = self.get_player_tile_pos()
         self.path = []
         self.d_point = self.pos
-        self.hp = Game.ENEMY_MAX_HEALTH
+        self.hp = self.game.ENEMY_MAX_HEALTH
         self.turret = turret
         if self.turret:
             self.dir = pygame.math.Vector2(0, 1)
@@ -59,8 +59,8 @@ class Enemy(object):
             # Update velocity
             self.path = self.get_path_to_tile(self.get_self_tile_pos(),self.get_player_tile_pos())
             for i in range(len(self.path)):
-                self.path[i] = pygame.math.Vector2((self.path[i][0] * Game.TILE_SIZE) + (Game.TILE_SIZE/2),
-                (self.path[i][1] * Game.TILE_SIZE) + (Game.TILE_SIZE/2))
+                self.path[i] = pygame.math.Vector2((self.path[i][0] * self.game.TILE_SIZE) + (self.game.TILE_SIZE/2),
+                (self.path[i][1] * self.game.TILE_SIZE) + (self.game.TILE_SIZE/2))
                     
             for p in self.path:
                 dist = p - self.pos
@@ -87,7 +87,7 @@ class Enemy(object):
                 self.prev_dir = pygame.math.Vector2(self.dir)
             # Update animation
             self.anim_timer += self.game.delta
-            if self.anim_timer >= Game.ENEMY_ANIM_DELAY:
+            if self.anim_timer >= self.game.ENEMY_ANIM_DELAY:
                 self.cur_frame = (self.cur_frame + 1) % 2
                 self.anim_timer = 0.0
             
@@ -120,7 +120,7 @@ class Enemy(object):
         else:
             #spin dat boi
             self.spin_timer += self.game.delta
-            if(self.spin_timer >= Game.ENEMY_SPIN_DELAY):
+            if(self.spin_timer >= self.game.ENEMY_SPIN_DELAY):
                 self.spin_timer = 0.0
                 self.spin_index+=1
                 if(self.spin_index == len(self.imgs.keys())):
@@ -128,7 +128,7 @@ class Enemy(object):
                 self.dir = list(self.imgs.keys())[self.spin_index]
                 
             self.atk_timer += self.game.delta
-            if self.atk_timer >= Game.ENEMY_ATTACK_DELAY:
+            if self.atk_timer >= self.game.ENEMY_ATTACK_DELAY:
                 
                 self.atk_timer = 0.0
                 dirs = []
@@ -171,7 +171,7 @@ class Enemy(object):
     
     def get_map_tile_pos(self):
         closed = []
-        map = Game.ROOMS[self.game.cur_room]
+        map = self.game.ROOMS[self.game.cur_room]
         y = 0
         for row in map:
             x = 0
@@ -234,7 +234,7 @@ class Explosion(object):
         self.imgs = self.game.explosion
     def update(self):
         self.anim_timer += self.game.delta
-        if(self.anim_timer > Game.EXPLOSION_ANIM_DELAY):
+        if(self.anim_timer > self.game.EXPLOSION_ANIM_DELAY):
             self.anim_timer = 0.0
             self.cur_frame += 1
             if(self.cur_frame == len(self.imgs)):
