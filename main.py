@@ -100,6 +100,21 @@ class Game(object):
         self.enemy_bullet_img = pygame.image.load(
             "img/hazards_and_enemies/enemy_bullet.png").convert_alpha()
 
+        # BOSS
+        self.boss_head_img = pygame.image.load(
+            "img/hazards_and_enemies/jim_head.png").convert_alpha()
+        self.boss_eyes_img = pygame.image.load(
+            "img/hazards_and_enemies/jim_eyes.png").convert_alpha()
+        self.boss_hand_imgs = [
+            pygame.image.load(
+                "img/hazards_and_enemies/boss_hands_animation/hand_0000.png").convert_alpha(),
+            pygame.image.load(
+                "img/hazards_and_enemies/boss_hands_animation/hand_0001.png").convert_alpha(),
+            pygame.image.load(
+                "img/hazards_and_enemies/boss_hands_animation/hand_0002.png").convert_alpha(),
+            pygame.image.load(
+                "img/hazards_and_enemies/boss_hands_animation/hand_0003.png").convert_alpha()]
+
     def handle_events(self):
         self.events = pygame.event.get()
         for e in self.events:
