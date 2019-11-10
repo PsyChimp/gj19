@@ -3,6 +3,8 @@ from pygame.locals import *
 
 from globals import *
 
+import bullet
+
 class Player(object):
     def __init__(self, game):
         self.game = game
@@ -51,9 +53,9 @@ class Player(object):
         self.atk_dir.y = (self.game.keys[K_DOWN] - self.game.keys[K_UP])
         if (self.atk_dir.x != 0 or self.atk_dir.y != 0) and self.can_attack:
             # Fire a bullet
-            self.bullets.append(Bullet(
+            self.bullets.append(bullet.Bullet(
                 self.game, pygame.math.Vector2(self.pos),
-                pygame.math.Vector2(self.atk_dir)))
+                pygame.math.Vector2(self.atk_dir), True))
             self.can_attack = False
 
         # Calculate new position
@@ -101,25 +103,3 @@ class Player(object):
         for b in self.bullets:
             b.draw()
 
-class Bullet(object):
-    def __init__(self, game, pos, dir):
-        self.game = game
-        self.img = self.game.player_bullet_img
-        self.rect = Rect(0, 0, 20, 20)
-        self.pos = pos
-        self.dir = dir
-
-    def update(self):
-        self.pos += self.dir * BULLET_SPEED * self.game.delta
-        self.rect.center = self.pos
-        for t in self.game.obstacles:
-            if t.rect.colliderect(self.rect):
-                return False
-        for e in self.game.enemies:
-            if self.pos.distance_squared_to(e.pos) <= (self.radius + e.radius) ** 2:
-                e.hp -= 1
-                return False
-        return True
-
-    def draw(self):
-        self.game.screen.blit(self.img, self.pos - (10, 10))

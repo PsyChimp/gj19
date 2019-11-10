@@ -7,6 +7,8 @@ from globals import *
 
 from queue import *
 
+import bullet
+
 class Enemy(object):
     def __init__(self,game,tile_pos):
         self.game = game
