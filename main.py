@@ -72,7 +72,7 @@ class Game(object):
             pygame.image.load("img/player/player_idle_e.png").convert_alpha()]
         player_walk_se = [
             pygame.image.load("img/player/player_walk_se1.png").convert_alpha(),
-            pygame.image.load("img/player/player_walk_se2.png"),
+            pygame.image.load("img/player/player_walk_se2.png").convert_alpha(),
             pygame.image.load("img/player/player_idle_se.png").convert_alpha()]
         player_walk_s = [
             pygame.image.load("img/player/player_walk_s1.png").convert_alpha(),
@@ -93,7 +93,47 @@ class Game(object):
             (-1,  1): player_walk_sw,
             (-1,  0): player_walk_w,
             (-1, -1): player_walk_nw}
-
+        
+        # ENEMIES
+        enemy_walk_n = [
+            pygame.image.load("img/hazards_and_enemies/pink_bomber/pinkbomber_idle_back.png").convert_alpha()
+        ]
+        enemy_walk_ne = [
+            pygame.image.load("img/hazards_and_enemies/pink_bomber/pinkbomber_idle_diagonal_up.png").convert_alpha()
+        ]
+        enemy_walk_e = [
+            pygame.image.load("img/hazards_and_enemies/pink_bomber/pinkbomber_idle_side.png").convert_alpha()
+        ]
+        enemy_walk_se = [
+            pygame.image.load("img/hazards_and_enemies/pink_bomber/pinkbomber_idle_diagonal_up.png").convert_alpha()
+        ]
+        enemy_walk_s = [
+            pygame.image.load("img/hazards_and_enemies/pink_bomber/pinkbomber_idle.png").convert_alpha()
+        ]
+        enemy_walk_sw = [
+            pygame.image.load("img/hazards_and_enemies/pink_bomber/pinkbomber_idle_diagonal_down.png").convert_alpha()
+        ]
+        enemy_walk_w = [
+            pygame.image.load("img/hazards_and_enemies/pink_bomber/pinkbomber_idle_side.png").convert_alpha()
+        ]
+        enemy_walk_nw = [
+            pygame.image.load("img/hazards_and_enemies/pink_bomber/pinkbomber_idle_diagonal_up.png").convert_alpha()
+        ]
+        enemy_walk_sw = [
+            pygame.transform.flip(img, True, False) for img in enemy_walk_se]
+        enemy_walk_w = [
+            pygame.transform.flip(img, True, False) for img in enemy_walk_w]
+        enemy_walk_nw = [
+            pygame.transform.flip(img, True, False) for img in enemy_walk_nw]
+        self.enemy_imgs = {
+            ( 0, -1): enemy_walk_n,
+            ( 1, -1): enemy_walk_ne,
+            ( 1,  0): enemy_walk_e,
+            ( 1,  1): enemy_walk_se,
+            ( 0,  1): enemy_walk_s,
+            (-1,  1): enemy_walk_sw,
+            (-1,  0): enemy_walk_w,
+            (-1, -1): enemy_walk_nw}
         # BULLETS
         self.player_bullet_img = pygame.image.load(
             "img/player/player_bullet.png").convert_alpha()
