@@ -1,7 +1,7 @@
 import pygame
 from pygame.locals import *
 
-from globals import *
+import globals
 
 
 class Downgrade(object):
@@ -19,14 +19,19 @@ class OneHPDowngrade(Downgrade):
 
 class MoveSpeedDowngrade(Downgrade):
     def apply(self):
-        self.game.PLAYER_SPEED *= 0.5
+        globals.PLAYER_SPEED *= 0.5
 
 
 class EnemySpeedDowngrade(Downgrade):
     def apply(self):
-        self.game.ENEMY_SPEED *= 2
+        globals.ENEMY_SPEED *= 2
 
 
 class EnemyHPDowngrade(Downgrade):
     def apply(self):
-        self.game.ENEMY_MAX_HEALTH *= 2
+        globals.ENEMY_MAX_HEALTH *= 2
+
+
+
+
+

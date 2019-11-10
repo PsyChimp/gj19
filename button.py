@@ -2,13 +2,13 @@ import pygame
 from pygame.locals import *
 import random
 from downgrade import *
-from main import *
+
 
 
 class Button(object):
-    def __init__(self, game, rect, colors, font, text, on_click, *args):
+    def __init__(self,  rect, colors, font, text, on_click, *args):
 
-        self.game = game
+
         self.rect = rect
         self.colors = colors
         self.text_surf = font.render(text, True, colors["text"])
@@ -43,12 +43,13 @@ class Button(object):
 
 
 if __name__ == "__main__":
-    def foo(game):
+    def foo():
         if numbers[0] == 0:
             text1 = "One attack"
             print(text1)
         elif numbers[0] == 1:
-            OneHPDowngrade.apply(game)
+            text1 = "Have one HP"
+            print(text1)
         elif numbers[0] == 2:
             text1 = "Blur Vision"
             print(text1)
@@ -56,7 +57,8 @@ if __name__ == "__main__":
             text1 = "No Vision"
             print(text1)
         elif numbers[0] == 4:
-            MoveSpeedDowngrade.apply(game)
+            text1 = "Slow Move"
+            print(text1)
         elif numbers[0] == 5:
             text1 = "Less Timer"
             print(text1)
@@ -70,9 +72,11 @@ if __name__ == "__main__":
             text1 = "Enemy Atk up"
             print(text1)
         elif numbers[0] == 9:
-            EnemyHPDowngrade.apply(game)
+            text1 = "Enemy HP up"
+            print(text1)
         elif numbers[0] == 10:
-            EnemyHPDowngrade.apply(game)
+            text1 = "Enemy Spd up"
+            print(text1)
         elif numbers[0] == 11:
             text1 = "No Dash"
             print(text1)
@@ -80,20 +84,22 @@ if __name__ == "__main__":
             text1 = "Reverse Con"
             print(text1)
 
-    def foo1(game):
+    def foo1():
         if numbers[1] == 0:
             text2 = "One attack"
             print(text2)
         elif numbers[1] == 1:
-            OneHPDowngrade.apply(game)
+            text2 = "Have one HP"
+            print(text2)
         elif numbers[1] == 2:
             text2 = "Blur Vision"
             print(text2)
-        elif numbers[0] == 3:
+        elif numbers[1] == 3:
             text2 = "No Vision"
             print(text2)
         elif numbers[1] == 4:
-            MoveSpeedDowngrade.apply(game)
+            text2 = "Slow Move"
+            print(text2)
         elif numbers[1] == 5:
             text2 = "Less Timer"
             print(text2)
@@ -107,9 +113,11 @@ if __name__ == "__main__":
             text2 = "Enemy Atk up"
             print(text2)
         elif numbers[1] == 9:
-            EnemyHPDowngrade.apply(game)
+            text2 = "Enemy HP up"
+            print(text2)
         elif numbers[1] == 10:
-            EnemyHPDowngrade.apply(game)
+            text2 = "Enemy Spd up"
+            print(text2)
         elif numbers[1] == 11:
             text2 = "No Dash"
             print(text2)
@@ -117,12 +125,13 @@ if __name__ == "__main__":
             text2 = "Reverse Con"
             print(text2)
 
-    def foo2(game):
+    def foo2():
         if numbers[2] == 0:
             text3 = "One attack"
             print(text3)
         elif numbers[2] == 1:
-            OneHPDowngrade.apply(game)
+            text3 = "Have one HP"
+            print(text3)
         elif numbers[2] == 2:
             text3 = "Blur Vision"
             print(text3)
@@ -130,7 +139,8 @@ if __name__ == "__main__":
             text3 = "No Vision"
             print(text3)
         elif numbers[2] == 4:
-            MoveSpeedDowngrade.apply(game)
+            text3 = "Slow Move"
+            print(text3)
         elif numbers[2] == 5:
             text3 = "Less Timer"
             print(text3)
@@ -144,9 +154,11 @@ if __name__ == "__main__":
             text3 = "Enemy Atk up"
             print(text3)
         elif numbers[2] == 9:
-            EnemyHPDowngrade.apply(game)
+            text3 = "Enemy HP up"
+            print(text3)
         elif numbers[2] == 10:
-            EnemyHPDowngrade.apply(game)
+            text3 = "Enemy Spd up"
+            print(text3)
         elif numbers[2] == 11:
             text3 = "No Dash"
             print(text3)
@@ -290,9 +302,9 @@ if __name__ == "__main__":
         icon1, icon2, icon3, icon4, icon5, icon6, icon7, icon8, icon9, icon10, icon11, icon12, icon13
     ]
     buttons = [
-        Button(Game, pygame.Rect(32, 64, 128, 128), colors, font, text1, foo(Game)),
-        Button(Game, pygame.Rect(192, 64, 128, 128), colors, font, text2, foo1(Game)),
-        Button(Game, pygame.Rect(352, 64, 128, 128), colors, font, text3, foo2(Game))]
+        Button( pygame.Rect(32, 64, 128, 128), colors, font, text1, foo),
+        Button( pygame.Rect(192, 64, 128, 128), colors, font, text2, foo1),
+        Button( pygame.Rect(352, 64, 128, 128), colors, font, text3, foo2)]
 
     while True:
         e = pygame.event.poll()
