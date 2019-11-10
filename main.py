@@ -3,6 +3,7 @@ import sys
 import pygame
 from pygame.locals import *
 
+import boss
 import enemy
 import player
 import tile
@@ -21,6 +22,7 @@ class Game(object):
 
         self.player = None
         self.enemies = None
+        self.boss = None
         self.tiles = None
         self.obstacles = None
 
@@ -127,10 +129,6 @@ class Game(object):
                     self.paused = not self.paused
                 elif e.key == K_F1:
                     self.debug = not self.debug
-                elif e.key == K_r:
-                    # Skip to the next room
-                    self.cur_room += 1
-                    self.load_room()
                 elif e.key == K_c:
                     # Delete all enemies
                     self.enemies.clear()
@@ -154,6 +152,8 @@ class Game(object):
                 if i < 20 and t.type == "door":
                     t.img = self.room_tiles["door_open"]
             self.doors_open = True
+
+        self.boss.update()
 
         # Check for player entering a door
         if self.player.pos.y < TILE_SIZE:
@@ -182,6 +182,9 @@ class Game(object):
         if self.cur_room >= len(ROOMS):
             self.playing = False
             return
+        if self.cur_room == 3:
+            # Boss room
+            self.boss = boss.Boss(self)
         self.player.bullets.clear()
         self.tiles = []
         self.obstacles = []
