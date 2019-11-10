@@ -6,7 +6,6 @@ from pygame.locals import *
 import bullet
 from globals import *
 
-CENTER_X = WIN_WIDTH_PX / 2
 EYE_OFFSET_X = 32
 EYE_OFFSET_Y = -3
 HAND_OFFSET_X = 200
@@ -18,6 +17,7 @@ MAX_HP = 20
 class Boss(object):
     def __init__(self, game):
         self.game = game
+        self.centerx = self.game.WIN_WIDTH_PX / 2
 
         # Images
         self.head_img = self.game.boss_head_img
@@ -27,7 +27,7 @@ class Boss(object):
             pygame.transform.flip(img, True, False) for img in self.game.boss_hand_imgs]
 
         # Head position
-        self.head_pos = pygame.math.Vector2(CENTER_X, 150)
+        self.head_pos = pygame.math.Vector2(self.centerx, 150)
 
         # Eye positions
         self.left_eye_dir = pygame.math.Vector2(0, 1)
@@ -84,7 +84,7 @@ class Boss(object):
         # Spawn bullets
         if self.can_attack:
             rand_pos = pygame.math.Vector2(
-                random.randint(100, WIN_WIDTH_PX - 100), 300)
+                random.randint(100, self.game.WIN_WIDTH_PX - 100), 300)
             self.bullets.append(bullet.Bullet(
                 self.game, rand_pos, pygame.math.Vector2(0, 1)))
             self.can_attack = False
@@ -125,8 +125,8 @@ class Boss(object):
             b.draw()
 
         # Draw HP bar
-        w, h = WIN_WIDTH_PX, 15
-        x, y = 0, WIN_HEIGHT_PX - h
+        w, h = self.game.WIN_WIDTH_PX, 15
+        x, y = 0, self.game.WIN_HEIGHT_PX - h
         w_ = self.hp * (w / MAX_HP)
-        pygame.draw.rect(self.game.screen, BLACK, (x, y, w, h))
-        pygame.draw.rect(self.game.screen, RED, (x, y, w_, h))
+        pygame.draw.rect(self.game.screen, self.game.BLACK, (x, y, w, h))
+        pygame.draw.rect(self.game.screen, self.game.RED, (x, y, w_, h))

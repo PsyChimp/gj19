@@ -26,7 +26,7 @@ class Game(object):
     PLAYER_SPEED = 125
     PLAYER_ANIM_DELAY = 0.2
     PLAYER_ATTACK_DELAY = 0.2
-    PLAYER_SPAWN = (WIN_WIDTH_PX / 2, WIN_HEIGHT_PX / 2)
+    PLAYER_SPAWN = (WIN_WIDTH_PX / 2, WIN_HEIGHT_PX * 0.8)
 
     ENEMY_MAX_HEALTH = 1
     ENEMY_SPEED = 50
@@ -508,7 +508,7 @@ class Game(object):
         self.wait_for_key()
 
     def show_win_screen(self):
-        self.screen.fill(BLUE)
+        self.screen.fill(Game.BLUE)
         self.draw_text(
             "You win!", self.tmpfont64, Game.WHITE,
             (Game.WIN_WIDTH_PX / 2, Game.WIN_HEIGHT_PX / 2), "center")
@@ -517,7 +517,7 @@ class Game(object):
         self.wait_for_key()
 
     def show_game_over_screen(self):
-        self.screen.fill(BLUE)
+        self.screen.fill(Game.BLUE)
         self.draw_text(
             "Game over!", self.tmpfont64, Game.WHITE,
             (Game.WIN_WIDTH_PX / 2, Game.WIN_HEIGHT_PX / 2), "center")
