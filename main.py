@@ -146,8 +146,8 @@ class Game(object):
         # BOSS
         self.boss_head_img = pygame.image.load(
             "img/hazards_and_enemies/jim_head.png").convert_alpha()
-        self.boss_eyes_img = pygame.image.load(
-            "img/hazards_and_enemies/jim_eyes.png").convert_alpha()
+        self.boss_eye_img = pygame.image.load(
+            "img/hazards_and_enemies/jim_eye.png").convert_alpha()
         self.boss_hand_imgs = [
             pygame.image.load(
                 "img/hazards_and_enemies/boss_hands_animation/hand_0000.png").convert_alpha(),
@@ -298,7 +298,7 @@ class Game(object):
         """Reset all game variables to their initial values."""
         self.player = player.Player(self)
 
-        self.cur_room = 0
+        self.cur_room = 3
         self.enemies = []
         self.load_room()
 
@@ -367,7 +367,7 @@ if __name__ == "__main__":
         g.show_start_screen()
         g.new()
         g.run()
-        if self.win:
+        if g.win:
             g.show_win_screen()
         else:
             g.show_game_over_screen()
