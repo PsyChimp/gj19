@@ -18,7 +18,11 @@ class Enemy(object):
         self.radius = 10
         self.can_move_x = True
         self.can_move_y = True
-        self.direction = pygame.math.Vector2(random.uniform(-1, 1), random.uniform(-1, 1))
+        self.dir = pygame.math.Vector2(random.uniform(-1, 1), random.uniform(-1, 1))
+        self.prev_dir = pygame.math.Vector2(0, 1)
+        self.imgs = self.game.enemy_imgs
+        self.anim_timer = 0.0
+        self.cur_frame = 0
         self.prev_direction = pygame.math.Vector2(0, 1)
         self.player_pos = self.get_player_tile_pos()
         self.path = []
@@ -26,8 +30,12 @@ class Enemy(object):
         self.hp = 1
         self.turret = turret
         if self.turret:
+            self.dir = pygame.math.Vector2(0, 1)
+            self.imgs = self.game.turret_imgs
             self.cardinal = True
             self.bullets = []
+            self.spin_index = 0
+            self.spin_timer = 0.0
             self.atk_timer = 0.0
             #calculate directions:
             self.card_dirs = []
@@ -42,6 +50,11 @@ class Enemy(object):
                         self.card_dirs.append(pygame.math.Vector2(i,j))
     def update(self):
         if not self.turret:
+            #check for explosion
+            dist = self.game.player.pos - self.pos
+            if(dist.length() <= TILE_SIZE/2):
+                self.game.player.hp -= 5
+                return False
             # Update velocity
             self.path = self.get_path_to_tile(self.get_self_tile_pos(),self.get_player_tile_pos())
             for i in range(len(self.path)):
@@ -60,12 +73,22 @@ class Enemy(object):
             #print(self.pos, self.d_point)
             self.vel = self.d_point - self.pos
             if self.vel.length() != 0:
-                self.vel = self.vel.normalize() * (PLAYER_SPEED / 2)
+                self.vel = self.vel.normalize()
             #print(self.vel)
-            self.direction.x = (self.game.player.pos[0] - self.pos[0])
-            self.direction.y = (self.game.player.pos[1] - self.pos[1])
-            if self.direction.x != 0 or self.direction.y != 0:
-                self.prev_direction = pygame.math.Vector2(self.direction)
+            
+            self.dir.x = (round(self.vel.x))
+            self.dir.y = (round(self.vel.y))
+            
+            self.vel *= ENEMY_SPEED
+            
+            if self.dir.x != 0 or self.dir.y != 0:
+                self.prev_direction = pygame.math.Vector2(self.dir)
+                self.prev_dir = pygame.math.Vector2(self.dir)
+            # Update animation
+            self.anim_timer += self.game.delta
+            if self.anim_timer >= ENEMY_ANIM_DELAY:
+                self.cur_frame = (self.cur_frame + 1) % 2
+                self.anim_timer = 0.0
             
             # Calculate new position
             new_pos = self.pos + (self.vel * self.game.delta)
@@ -94,6 +117,15 @@ class Enemy(object):
                 self.pos.y = new_pos.y
             self.can_move_x, self.can_move_y = True, True
         else:
+            #spin dat boi
+            self.spin_timer += self.game.delta
+            if(self.spin_timer >= ENEMY_SPIN_DELAY):
+                self.spin_timer = 0.0
+                self.spin_index+=1
+                if(self.spin_index == len(self.imgs.keys())):
+                    self.spin_index = 0
+                self.dir = list(self.imgs.keys())[self.spin_index]
+                
             self.atk_timer += self.game.delta
             if self.atk_timer >= ENEMY_ATTACK_DELAY:
                 
@@ -116,10 +148,17 @@ class Enemy(object):
             #pygame.draw.circle(self.game.screen, BLUE, tuple(map(lambda x:int((x * 32) + 16),k)), 10)
         #for p in self.path:
             #pygame.draw.circle(self.game.screen, WHITE, tuple(map(int,p)), 3)
+        
         if self.turret:
-            pygame.draw.rect(self.game.screen, GREEN, (x, y, 32, 32))
+            self.game.screen.blit(
+            self.imgs[tuple(self.dir)][0], (x, y))
         else:
-            pygame.draw.rect(self.game.screen, RED, (x, y, 32, 32))
+            if self.dir.x != 0 or self.dir.y != 0:
+                self.game.screen.blit(
+                self.imgs[tuple(self.dir)][self.cur_frame], (x, y))
+            else:
+                self.game.screen.blit(
+                self.imgs[tuple(self.prev_dir)][2], (x, y))
         if(self.turret):
             for b in self.bullets:
                 b.draw()
