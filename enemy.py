@@ -18,7 +18,7 @@ class Enemy(object):
         self.radius = 10
         self.can_move_x = True
         self.can_move_y = True
-        self.dir = pygame.math.Vector2(random.uniform(-1, 1), random.uniform(-1, 1))
+        self.dir = pygame.math.Vector2(round(random.uniform(-1, 1)), round(random.uniform(-1, 1)))
         self.prev_dir = pygame.math.Vector2(0, 1)
         self.imgs = self.game.enemy_imgs
         self.anim_timer = 0.0
@@ -224,3 +224,5 @@ class Enemy(object):
         path.reverse()
         return path
         
+class Explosion(object):
+    pass
