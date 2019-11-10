@@ -216,8 +216,7 @@ class Game(object):
                 "img/hazards_and_enemies/boss_hands_animation/hand_0002.png").convert_alpha(),
             pygame.image.load(
                 "img/hazards_and_enemies/boss_hands_animation/hand_0003.png").convert_alpha()]
-        self.downgrades = [downgrade.EnemyHPDowngrade(self.enemies), downgrade.MoveSpeedDowngrade(self.player),
-                           downgrade.EnemySpeedDowngrade(self.enemies), downgrade.OneHPDowngrade(self.player)]
+
 
     def handle_events(self):
         self.events = pygame.event.get()
@@ -291,7 +290,8 @@ class Game(object):
         self.screen.blit(text_surf, text_rect)
 
     def load_room(self):
-
+        self.downgrades = [downgrade.EnemyHPDowngrade(self.enemies), downgrade.MoveSpeedDowngrade(self.player),
+                           downgrade.EnemySpeedDowngrade(self.enemies), downgrade.OneHPDowngrade(self.player)]
         for d in self.downgrades:
             if not d.activated:
                 d.apply()

@@ -2,6 +2,7 @@ import pygame
 from pygame.locals import *
 
 import globals
+import enemy
 
 
 class Downgrade(object):
