@@ -3,6 +3,7 @@ import sys
 import pygame
 from pygame.locals import *
 
+import boss
 import enemy
 import player
 import tile
@@ -21,6 +22,7 @@ class Game(object):
 
         self.player = None
         self.enemies = None
+        self.boss = None
         self.tiles = None
         self.obstacles = None
 
@@ -32,6 +34,7 @@ class Game(object):
         self.playing = False
         self.paused = False
         self.debug = False
+        self.win = False
 
         # For debugging
         self.tmpfont16 = pygame.font.Font(None, 16)
@@ -224,13 +227,13 @@ class Game(object):
                     self.paused = not self.paused
                 elif e.key == K_F1:
                     self.debug = not self.debug
-                elif e.key == K_r:
-                    # Skip to the next room
-                    self.cur_room += 1
-                    self.load_room()
                 elif e.key == K_c:
                     # Delete all enemies
                     self.enemies.clear()
+                elif e.key == K_b:
+                    # Defeat boss
+                    if self.boss is not None:
+                        self.boss.hp = 0
         self.player.handle_events()
 
     def update(self):
@@ -251,6 +254,12 @@ class Game(object):
                     t.img = self.room_tiles["door_open"]
             self.doors_open = True
 
+        if self.boss is not None:
+            self.boss.update()
+            if self.boss.hp <= 0:
+                self.playing = False
+                self.win = True
+
         # Check for player entering a door
         if self.player.pos.y < TILE_SIZE:
             self.cur_room += 1
@@ -261,6 +270,9 @@ class Game(object):
             t.draw()
             if self.debug:
                 pygame.draw.rect(self.screen, RED, t.rect, 1)
+
+        if self.boss is not None:
+            self.boss.draw()
 
         self.player.draw()
 
@@ -278,6 +290,9 @@ class Game(object):
         if self.cur_room >= len(ROOMS):
             self.playing = False
             return
+        if self.cur_room == 3:
+            # Boss room
+            self.boss = boss.Boss(self)
         self.player.bullets.clear()
         self.tiles = []
         self.obstacles = []
@@ -343,7 +358,6 @@ class Game(object):
         self.enemies = []
         self.load_room()
 
-        
     def run(self):
         self.playing = True
         # pygame.mixer.music.load("snd/level_theme.ogg")
@@ -367,6 +381,15 @@ class Game(object):
             "Press any key to begin!", self.tmpfont64, WHITE,
             (WIN_WIDTH_PX / 2, WIN_HEIGHT_PX / 2), "center")
         pygame.display.flip()
+        self.wait_for_key()
+
+    def show_win_screen(self):
+        self.screen.fill(BLUE)
+        self.draw_text(
+            "You win!", self.tmpfont64, WHITE,
+            (WIN_WIDTH_PX / 2, WIN_HEIGHT_PX / 2), "center")
+        pygame.display.flip()
+        pygame.time.wait(3000)
         self.wait_for_key()
 
     def show_game_over_screen(self):
@@ -400,5 +423,8 @@ if __name__ == "__main__":
         g.show_start_screen()
         g.new()
         g.run()
-        g.show_game_over_screen()
+        if self.win:
+            g.show_win_screen()
+        else:
+            g.show_game_over_screen()
         g.quit()
