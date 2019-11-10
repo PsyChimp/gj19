@@ -91,7 +91,8 @@ class Game(object):
             (-1,  1): player_walk_sw,
             (-1,  0): player_walk_w,
             (-1, -1): player_walk_nw}
-        self.player_bullet_img = pygame.image.load("img/player/player_bullet.png").convert_alpha()
+        self.player_bullet_img = pygame.image.load(
+            "img/player/player_bullet.png").convert_alpha()
 
     def handle_events(self):
         self.events = pygame.event.get()
