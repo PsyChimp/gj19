@@ -155,6 +155,7 @@ class Game(object):
         # SCREENS
         self.title_screen = pygame.image.load("img/screens/Title Screen.png").convert()
         self.win_screen = pygame.image.load("img/screens/win.png").convert()
+        self.game_over_screen = pygame.image.load("img/screens/game over screen.png").convert()
 
         # ROOM TILES
         self.room_tiles = {
@@ -516,10 +517,7 @@ class Game(object):
         self.wait_for_key()
 
     def show_game_over_screen(self):
-        self.screen.fill(Game.BLUE)
-        self.draw_text(
-            "Game over!", self.tmpfont64, Game.WHITE,
-            (Game.WIN_WIDTH_PX / 2, Game.WIN_HEIGHT_PX / 2), "center")
+        self.screen.blit(self.game_over_screen, (0, 0))
         pygame.display.flip()
         pygame.time.wait(3000)
         self.wait_for_key()
