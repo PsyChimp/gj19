@@ -160,6 +160,7 @@ class Game(object):
         if self.cur_room >= len(ROOMS):
             self.playing = False
             return
+        self.player.bullets.clear()
         self.tiles = []
         self.obstacles = []
         y = 0
