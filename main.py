@@ -8,6 +8,7 @@ import enemy
 import player
 import tile
 from globals import *
+import downgrade
 
 class Game(object):
     def __init__(self):
@@ -22,6 +23,7 @@ class Game(object):
 
         self.player = None
         self.enemies = None
+        self.explo = None
         self.boss = None
         self.tiles = None
         self.obstacles = None
@@ -35,6 +37,7 @@ class Game(object):
         self.paused = False
         self.debug = False
         self.win = False
+
 
         # For debugging
         self.tmpfont16 = pygame.font.Font(None, 16)
@@ -99,27 +102,43 @@ class Game(object):
         
         # ENEMIES
         enemy_walk_n = [
+            pygame.image.load("img/hazards_and_enemies/pink_bomber/pinkbomber_walk_back/pinkbomber_walk_back_1.png").convert_alpha(),
+            pygame.image.load("img/hazards_and_enemies/pink_bomber/pinkbomber_walk_back/pinkbomber_walk_back_2.png").convert_alpha(),
             pygame.image.load("img/hazards_and_enemies/pink_bomber/pinkbomber_idle_back.png").convert_alpha()
         ]
         enemy_walk_ne = [
+            pygame.image.load("img/hazards_and_enemies/pink_bomber/pinkbomber_diagonal_up/pinkbomber_walk_diagonal_up_1.png").convert_alpha(),
+            pygame.image.load("img/hazards_and_enemies/pink_bomber/pinkbomber_diagonal_up/pinkbomber_walk_diagonal_up_2.png").convert_alpha(),
             pygame.image.load("img/hazards_and_enemies/pink_bomber/pinkbomber_idle_diagonal_up.png").convert_alpha()
         ]
         enemy_walk_e = [
+            pygame.image.load("img/hazards_and_enemies/pink_bomber/pinkbomber_side/pinkbomber_side_1.png").convert_alpha(),
+            pygame.image.load("img/hazards_and_enemies/pink_bomber/pinkbomber_side/pinkbomber_side_2.png").convert_alpha(),
             pygame.image.load("img/hazards_and_enemies/pink_bomber/pinkbomber_idle_side.png").convert_alpha()
         ]
         enemy_walk_se = [
+            pygame.image.load("img/hazards_and_enemies/pink_bomber/pinkbomber_diagonal_down/pinkbomber_walk_diagonal_down_1.png").convert_alpha(),
+            pygame.image.load("img/hazards_and_enemies/pink_bomber/pinkbomber_diagonal_down/pinkbomber_walk_diagonal_down_2.png").convert_alpha(),
             pygame.image.load("img/hazards_and_enemies/pink_bomber/pinkbomber_idle_diagonal_up.png").convert_alpha()
         ]
         enemy_walk_s = [
+            pygame.image.load("img/hazards_and_enemies/pink_bomber/pinkbomber_walk/pinkbomber_walk_1.png").convert_alpha(),
+            pygame.image.load("img/hazards_and_enemies/pink_bomber/pinkbomber_walk/pinkbomber_walk_2.png").convert_alpha(),
             pygame.image.load("img/hazards_and_enemies/pink_bomber/pinkbomber_idle.png").convert_alpha()
         ]
         enemy_walk_sw = [
+            pygame.image.load("img/hazards_and_enemies/pink_bomber/pinkbomber_diagonal_down/pinkbomber_walk_diagonal_down_1.png").convert_alpha(),
+            pygame.image.load("img/hazards_and_enemies/pink_bomber/pinkbomber_diagonal_down/pinkbomber_walk_diagonal_down_2.png").convert_alpha(),
             pygame.image.load("img/hazards_and_enemies/pink_bomber/pinkbomber_idle_diagonal_down.png").convert_alpha()
         ]
         enemy_walk_w = [
+            pygame.image.load("img/hazards_and_enemies/pink_bomber/pinkbomber_side/pinkbomber_side_1.png").convert_alpha(),
+            pygame.image.load("img/hazards_and_enemies/pink_bomber/pinkbomber_side/pinkbomber_side_2.png").convert_alpha(),
             pygame.image.load("img/hazards_and_enemies/pink_bomber/pinkbomber_idle_side.png").convert_alpha()
         ]
         enemy_walk_nw = [
+            pygame.image.load("img/hazards_and_enemies/pink_bomber/pinkbomber_diagonal_up/pinkbomber_walk_diagonal_up_1.png").convert_alpha(),
+            pygame.image.load("img/hazards_and_enemies/pink_bomber/pinkbomber_diagonal_up/pinkbomber_walk_diagonal_up_2.png").convert_alpha(),
             pygame.image.load("img/hazards_and_enemies/pink_bomber/pinkbomber_idle_diagonal_up.png").convert_alpha()
         ]
         enemy_walk_sw = [
@@ -137,6 +156,55 @@ class Game(object):
             (-1,  1): enemy_walk_sw,
             (-1,  0): enemy_walk_w,
             (-1, -1): enemy_walk_nw}
+        
+        #TURRET
+        turret_n = [
+            pygame.image.load("img/hazards_and_enemies/gorpig/gorpig_back.png").convert_alpha()
+        ]
+        turret_ne = [
+            pygame.image.load("img/hazards_and_enemies/gorpig/gorpig_diagonal_up.png").convert_alpha()
+        ]
+        turret_e = [
+            pygame.image.load("img/hazards_and_enemies/gorpig/gorpig_right.png").convert_alpha()
+        ]
+        turret_se = [
+            pygame.image.load("img/hazards_and_enemies/gorpig/gorpig_diagonal_down.png").convert_alpha()
+        ]
+        turret_s = [
+            pygame.image.load("img/hazards_and_enemies/gorpig/gorpig_front.png").convert_alpha()
+        ]
+        turret_sw = [
+            pygame.image.load("img/hazards_and_enemies/gorpig/gorpig_diagonal_down.png").convert_alpha()
+        ]
+        turret_w = [
+            pygame.image.load("img/hazards_and_enemies/gorpig/gorpig_right.png").convert_alpha()
+        ]
+        turret_nw = [
+            pygame.image.load("img/hazards_and_enemies/gorpig/gorpig_diagonal_up.png").convert_alpha()
+        ]
+        turret_sw = [
+            pygame.transform.flip(img, True, False) for img in turret_se]
+        turret_w = [
+            pygame.transform.flip(img, True, False) for img in turret_w]
+        turret_nw = [
+            pygame.transform.flip(img, True, False) for img in turret_nw]
+        self.turret_imgs = {
+            ( 0, -1): turret_n,
+            ( 1, -1): turret_ne,
+            ( 1,  0): turret_e,
+            ( 1,  1): turret_se,
+            ( 0,  1): turret_s,
+            (-1,  1): turret_sw,
+            (-1,  0): turret_w,
+            (-1, -1): turret_nw}
+        #explosion
+        self.explosion = [
+            pygame.image.load("img/hazards_and_enemies/pink_bomber_explosion/p_explosion_1.png").convert_alpha(),
+            pygame.image.load("img/hazards_and_enemies/pink_bomber_explosion/p_explosion_2.png").convert_alpha(),
+            pygame.image.load("img/hazards_and_enemies/pink_bomber_explosion/p_explosion_3.png").convert_alpha(),
+            pygame.image.load("img/hazards_and_enemies/pink_bomber_explosion/p_explosion_4.png").convert_alpha(),
+        ]
+        
         # BULLETS
         self.player_bullet_img = pygame.image.load(
             "img/player/player_bullet.png").convert_alpha()
@@ -157,6 +225,7 @@ class Game(object):
                 "img/hazards_and_enemies/boss_hands_animation/hand_0002.png").convert_alpha(),
             pygame.image.load(
                 "img/hazards_and_enemies/boss_hands_animation/hand_0003.png").convert_alpha()]
+
 
     def handle_events(self):
         self.events = pygame.event.get()
@@ -189,8 +258,8 @@ class Game(object):
         if self.player.hp <= 0:
             self.playing = False
 
-        for e in self.enemies:
-            e.update()
+        self.enemies[:] = [e for e in self.enemies if e.update() == True]
+        self.explo[:] = [e for e in self.explo if e.update() == True]
         if not self.doors_open and len(self.enemies) == 0:
             self.obstacles[:] = [t for t in self.obstacles if t.type != "door"]
             for i, t in enumerate(self.tiles):
@@ -222,7 +291,8 @@ class Game(object):
 
         for e in self.enemies:
             e.draw()
-
+        for e in self.explo:
+            e.draw()
         pygame.display.flip()
 
     def draw_text(self, text, font, color, pos, align="topleft"):
@@ -231,6 +301,11 @@ class Game(object):
         self.screen.blit(text_surf, text_rect)
 
     def load_room(self):
+        self.downgrades = [downgrade.EnemyHPDowngrade(self.enemies), downgrade.MoveSpeedDowngrade(self.player),
+                           downgrade.EnemySpeedDowngrade(self.enemies), downgrade.OneHPDowngrade(self.player)]
+        for d in self.downgrades:
+            if not d.activated:
+                d.apply()
         if self.cur_room >= len(ROOMS):
             self.playing = False
             return
@@ -300,6 +375,7 @@ class Game(object):
 
         self.cur_room = 3
         self.enemies = []
+        self.explo = []
         self.load_room()
 
     def run(self):
