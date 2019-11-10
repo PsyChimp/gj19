@@ -173,6 +173,10 @@ class Game(object):
                 elif e.key == K_c:
                     # Delete all enemies
                     self.enemies.clear()
+                elif e.key == K_b:
+                    # Defeat boss
+                    if self.boss is not None:
+                        self.boss.hp = 0
         self.player.handle_events()
 
     def update(self):
@@ -194,10 +198,11 @@ class Game(object):
                     t.img = self.room_tiles["door_open"]
             self.doors_open = True
 
-        self.boss.update()
-        if self.boss.hp <= 0:
-            self.playing = False
-            self.win = True
+        if self.boss is not None:
+            self.boss.update()
+            if self.boss.hp <= 0:
+                self.playing = False
+                self.win = True
 
         # Check for player entering a door
         if self.player.pos.y < TILE_SIZE:
@@ -209,6 +214,9 @@ class Game(object):
             t.draw()
             if self.debug:
                 pygame.draw.rect(self.screen, RED, t.rect, 1)
+
+        if self.boss is not None:
+            self.boss.draw()
 
         self.player.draw()
 

@@ -27,6 +27,7 @@ class Boss(object):
         self.right_hand_rect = self.right_hand_imgs[0].get_rect()
 
         self.cur_frame = 0
+        self.hp = 10
 
     def update(self):
         # ...
