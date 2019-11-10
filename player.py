@@ -1,20 +1,20 @@
 import pygame
 from pygame.locals import *
 
-from globals import *
+from main import *
 
 import bullet
 
 class Player(object):
     def __init__(self, game):
         self.game = game
-        self.pos = pygame.math.Vector2(PLAYER_SPAWN)
+        self.pos = pygame.math.Vector2(game.PLAYER_SPAWN)
         self.dir = pygame.math.Vector2(0, 0)
         self.prev_dir = pygame.math.Vector2(0, 1)
         self.atk_dir = pygame.math.Vector2(0, 0)
         self.imgs = self.game.player_imgs
         self.radius = 16
-        self.hp = PLAYER_MAX_HEALTH
+        self.hp = game.PLAYER_MAX_HEALTH
         self.can_move_x = True
         self.can_move_y = True
         self.can_attack = True
@@ -34,7 +34,7 @@ class Player(object):
             self.prev_dir = pygame.math.Vector2(self.dir)
             # Update animation
             self.anim_timer += self.game.delta
-            if self.anim_timer >= PLAYER_ANIM_DELAY:
+            if self.anim_timer >= self.game.PLAYER_ANIM_DELAY:
                 self.cur_frame = (self.cur_frame + 1) % 2
                 self.anim_timer = 0.0
         else:
@@ -44,7 +44,7 @@ class Player(object):
         # Update attack timer
         if not self.can_attack:
             self.atk_timer += self.game.delta
-            if self.atk_timer >= PLAYER_ATTACK_DELAY:
+            if self.atk_timer >= self.game.PLAYER_ATTACK_DELAY:
                 self.can_attack = True
                 self.atk_timer = 0.0
 
@@ -59,7 +59,7 @@ class Player(object):
             self.can_attack = False
 
         # Calculate new position
-        new_pos = self.pos + (self.dir * PLAYER_SPEED * self.game.delta)
+        new_pos = self.pos + (self.dir * self.game.PLAYER_SPEED * self.game.delta)
         new_xrect = Rect(
             new_pos.x - self.radius,
             self.pos.y - self.radius,
@@ -98,7 +98,7 @@ class Player(object):
                 self.imgs[tuple(self.prev_dir)][2], (x, y))
         if self.game.debug:
             pygame.draw.rect(
-                self.game.screen, WHITE, (x, y, TILE_SIZE, TILE_SIZE), 1)
+                self.game.screen, game.WHITE, (x, y, game.TILE_SIZE, game.TILE_SIZE), 1)
 
         for b in self.bullets:
             b.draw()

@@ -10,11 +10,114 @@ import tile
 from globals import *
 import downgrade
 
+
+
+
 class Game(object):
+    TITLE = "Downgraded"
+
+    TILE_SIZE = 32
+    WIN_WIDTH_T = 20
+    WIN_HEIGHT_T = 15
+    WIN_WIDTH_PX = WIN_WIDTH_T * TILE_SIZE      # 640
+    WIN_HEIGHT_PX = WIN_HEIGHT_T * TILE_SIZE    # 480
+
+    PLAYER_MAX_HEALTH = 10
+    PLAYER_SPEED = 125
+    PLAYER_ANIM_DELAY = 0.2
+    PLAYER_ATTACK_DELAY = 0.2
+    PLAYER_SPAWN = (WIN_WIDTH_PX / 2, WIN_HEIGHT_PX / 2)
+
+    ENEMY_MAX_HEALTH = 1
+    ENEMY_SPEED = 50
+    ENEMY_ANIM_DELAY = 0.2
+    ENEMY_ATTACK_DELAY = 1.0
+    ENEMY_SPIN_DELAY = 0.2
+    ENEMY_AGGRO_RADIUS = 6
+
+    EXPLOSION_ANIM_DELAY = 0.1
+
+    BULLET_SPEED = 400
+
+    ROOMS = [
+        [
+            "@@@_@@@@@@@@@@@@_@@@",
+            "@..................@",
+            "@..................@",
+            "@.........E........@",
+            "@..................@",
+            "@..................@",
+            "@..................@",
+            "@..................@",
+            "@..................@",
+            "@..................@",
+            "@..................@",
+            "@..................@",
+            "@..................@",
+            "@..................@",
+            "@@@@@@@@@@@@@@@@@@@@"],
+            [
+            "@@@_@@@@@@@@@@@@_@@@",
+            "@..................@",
+            "@....E.............@",
+            "@..................@",
+            "@..................@",
+            "@..................@",
+            "@..................@",
+            "@..................@",
+            "@..................@",
+            "@..............E...@",
+            "@..................@",
+            "@..................@",
+            "@..................@",
+            "@..................@",
+            "@@@_@@@@@@@@@@@@_@@@"],
+            [
+            "@@@_@@@@@@@@@@@@_@@@",
+            "@..................@",
+            "@..................@",
+            "@...E..............@",
+            "@..................@",
+            "@...............E..@",
+            "@..................@",
+            "@..................@",
+            "@..................@",
+            "@..................@",
+            "@..................@",
+            "@.....E............@",
+            "@..................@",
+            "@..................@",
+            "@@@_@@@@@@@@@@@@_@@@"],
+            [
+            "@@@@@@@@@@@@@@@@@@@@",
+            "@..................@",
+            "@..................@",
+            "@..................@",
+            "@..................@",
+            "@..................@",
+            "@..................@",
+            "@..................@",
+            "@..................@",
+            "@..................@",
+            "@..................@",
+            "@..................@",
+            "@..................@",
+            "@..................@",
+            "@@@_@@@@@@@@@@@@_@@@"]]
+
+    BLACK = (0, 0, 0)
+    GRAY = (128, 128, 128)
+    WHITE = (255, 255, 255)
+    RED = (255, 0, 0)
+    GREEN = (0, 255, 0)
+    BLUE = (0, 0, 255)
+    YELLOW = (255, 255, 0)
+    CYAN = (0, 255, 255)
+    MAGENTA = (255, 0, 255)
     def __init__(self):
         pygame.init()
-        self.screen = pygame.display.set_mode((WIN_WIDTH_PX, WIN_HEIGHT_PX))
-        pygame.display.set_caption(TITLE)
+        self.screen = pygame.display.set_mode((Game.WIN_WIDTH_PX, Game.WIN_HEIGHT_PX))
+        pygame.display.set_caption(Game.TITLE)
         self.clock = pygame.time.Clock()
 
         self.delta = 0.0
@@ -44,8 +147,8 @@ class Game(object):
         self.tmpfont32 = pygame.font.Font(None, 32)
         self.tmpfont64 = pygame.font.Font(None, 64)
 
-        self.missing_frame = pygame.Surface((TILE_SIZE, TILE_SIZE))
-        self.missing_frame.fill(MAGENTA)
+        self.missing_frame = pygame.Surface((Game.TILE_SIZE, Game.TILE_SIZE))
+        self.missing_frame.fill(Game.MAGENTA)
 
         # Load images, sounds, fonts, etc.
         # ROOM TILES
@@ -225,7 +328,10 @@ class Game(object):
                 "img/hazards_and_enemies/boss_hands_animation/hand_0002.png").convert_alpha(),
             pygame.image.load(
                 "img/hazards_and_enemies/boss_hands_animation/hand_0003.png").convert_alpha()]
-
+        
+        #downgrades
+        self.downgrades = [downgrade.EnemyHPDowngrade(self), downgrade.MoveSpeedDowngrade(self),
+                           downgrade.EnemySpeedDowngrade(self), downgrade.OneHPDowngrade(self)]
 
     def handle_events(self):
         self.events = pygame.event.get()
@@ -274,7 +380,7 @@ class Game(object):
                 self.win = True
 
         # Check for player entering a door
-        if self.player.pos.y < TILE_SIZE:
+        if self.player.pos.y < Game.TILE_SIZE:
             self.cur_room += 1
             self.load_room()
 
@@ -301,14 +407,11 @@ class Game(object):
         self.screen.blit(text_surf, text_rect)
 
     def load_room(self):
-        self.downgrades = [downgrade.EnemyHPDowngrade(self.enemies), downgrade.MoveSpeedDowngrade(self.player),
-                           downgrade.EnemySpeedDowngrade(self.enemies), downgrade.OneHPDowngrade(self.player)]
-        for d in self.downgrades:
-            if not d.activated:
-                d.apply()
-        if self.cur_room >= len(ROOMS):
+        
+        if self.cur_room >= len(Game.ROOMS):
             self.playing = False
             return
+        self.downgrades[self.cur_room].apply()
         if self.cur_room == 3:
             # Boss room
             self.boss = boss.Boss(self)
@@ -316,30 +419,30 @@ class Game(object):
         self.tiles = []
         self.obstacles = []
         y = 0
-        for cur_row in ROOMS[self.cur_room]:
+        for cur_row in Game.ROOMS[self.cur_room]:
             x = 0
             for cur_tile in cur_row:
-                rect = Rect(x * TILE_SIZE, y * TILE_SIZE, TILE_SIZE, TILE_SIZE)
+                rect = Rect(x * Game.TILE_SIZE, y * Game.TILE_SIZE, Game.TILE_SIZE, Game.TILE_SIZE)
                 if cur_tile == "@":
                     type = "wall"
                     if y == 0:
                         if x == 0:
                             img = self.room_tiles["wall_top_left"]
-                        elif x == WIN_WIDTH_T - 1:
+                        elif x == Game.WIN_WIDTH_T - 1:
                             img = self.room_tiles["wall_top_right"]
                         else:
                             img = self.room_tiles["wall_top"]
-                    elif y == WIN_HEIGHT_T - 1:
+                    elif y == Game.WIN_HEIGHT_T - 1:
                         if x == 0:
                             img = self.room_tiles["wall_bottom_left"]
-                        elif x == WIN_WIDTH_T - 1:
+                        elif x == Game.WIN_WIDTH_T - 1:
                             img = self.room_tiles["wall_bottom_right"]
                         else:
                             img = self.room_tiles["wall_bottom"]
                     else:
                         if x == 0:
                             img = self.room_tiles["wall_left"]
-                        elif x == WIN_WIDTH_T - 1:
+                        elif x == Game.WIN_WIDTH_T - 1:
                             img = self.room_tiles["wall_right"]
                         else:
                             img = self.room_tiles["wall_square"]
@@ -347,7 +450,7 @@ class Game(object):
                     type = "door"
                     if y == 0:
                         img = self.room_tiles["door_closed"]
-                    elif y == WIN_HEIGHT_T - 1:
+                    elif y == Game.WIN_HEIGHT_T - 1:
                         img = pygame.transform.flip(
                             self.room_tiles["door_closed"], False, True)
                 elif cur_tile == ".":
@@ -366,7 +469,7 @@ class Game(object):
             y += 1
         self.obstacles[:] = [
             t for t in self.tiles if t.type == "wall" or t.type == "door"]
-        self.player.pos = pygame.math.Vector2(PLAYER_SPAWN)
+        self.player.pos = pygame.math.Vector2(Game.PLAYER_SPAWN)
         self.doors_open = False
 
     def new(self):
@@ -376,6 +479,7 @@ class Game(object):
         self.cur_room = 0
         self.enemies = []
         self.explo = []
+        
         self.load_room()
 
     def run(self):
@@ -396,18 +500,18 @@ class Game(object):
     def show_start_screen(self):
         # pygame.mixer.music.load("snd/start_theme.ogg")
         # pygame.mixer.music.play(-1)
-        self.screen.fill(BLUE)
+        self.screen.fill(Game.BLUE)
         self.draw_text(
-            "Press any key to begin!", self.tmpfont64, WHITE,
-            (WIN_WIDTH_PX / 2, WIN_HEIGHT_PX / 2), "center")
+            "Press any key to begin!", self.tmpfont64, Game.WHITE,
+            (Game.WIN_WIDTH_PX / 2, Game.WIN_HEIGHT_PX / 2), "center")
         pygame.display.flip()
         self.wait_for_key()
 
     def show_win_screen(self):
         self.screen.fill(BLUE)
         self.draw_text(
-            "You win!", self.tmpfont64, WHITE,
-            (WIN_WIDTH_PX / 2, WIN_HEIGHT_PX / 2), "center")
+            "You win!", self.tmpfont64, Game.WHITE,
+            (Game.WIN_WIDTH_PX / 2, Game.WIN_HEIGHT_PX / 2), "center")
         pygame.display.flip()
         pygame.time.wait(3000)
         self.wait_for_key()
@@ -415,8 +519,8 @@ class Game(object):
     def show_game_over_screen(self):
         self.screen.fill(BLUE)
         self.draw_text(
-            "Game over!", self.tmpfont64, WHITE,
-            (WIN_WIDTH_PX / 2, WIN_HEIGHT_PX / 2), "center")
+            "Game over!", self.tmpfont64, Game.WHITE,
+            (Game.WIN_WIDTH_PX / 2, Game.WIN_HEIGHT_PX / 2), "center")
         pygame.display.flip()
         pygame.time.wait(3000)
         self.wait_for_key()
@@ -435,7 +539,7 @@ class Game(object):
                 waiting = False
 
     def get_tile_pos(self, pos):
-        return ((pos.x // TILE_SIZE), (pos.y // TILE_SIZE))
+        return ((pos.x // Game.TILE_SIZE), (pos.y // Game.TILE_SIZE))
 
 if __name__ == "__main__":
     g = Game()

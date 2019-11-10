@@ -1,7 +1,7 @@
 import pygame
 from pygame.locals import *
 
-from globals import *
+from main import *
 class Bullet(object):
     def __init__(self, game, pos, dir, player = False):
         self.game = game
@@ -14,7 +14,7 @@ class Bullet(object):
         self.dir = dir
         self.radius = 10
     def update(self):
-        self.pos += self.dir * BULLET_SPEED * self.game.delta
+        self.pos += self.dir * self.game.BULLET_SPEED * self.game.delta
         self.rect.center = self.pos
         for t in self.game.obstacles:
             if t.rect.colliderect(self.rect):
@@ -25,7 +25,7 @@ class Bullet(object):
                 return False
         return True
     def enemyUpdate(self):
-        self.pos += self.dir * BULLET_SPEED * self.game.delta
+        self.pos += self.dir * self.game.BULLET_SPEED * self.game.delta
         self.rect.center = self.pos
         for t in self.game.obstacles:
             if t.rect.colliderect(self.rect):
