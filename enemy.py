@@ -53,6 +53,7 @@ class Enemy(object):
             #check for explosion
             dist = self.game.player.pos - self.pos
             if(dist.length() <= TILE_SIZE/2):
+                self.game.explo.append(Explosion(self.game,self.pos))
                 self.game.player.hp -= 5
                 return False
             # Update velocity
@@ -225,4 +226,21 @@ class Enemy(object):
         return path
         
 class Explosion(object):
-    pass
+    def __init__(self,game,pos):
+        self.pos = pos
+        self.game = game
+        self.cur_frame = 0
+        self.anim_timer = 0.0
+        self.imgs = self.game.explosion
+    def update(self):
+        self.anim_timer += self.game.delta
+        if(self.anim_timer > EXPLOSION_ANIM_DELAY):
+            self.anim_timer = 0.0
+            self.cur_frame += 1
+            if(self.cur_frame == len(self.imgs)):
+                return False
+        return True
+    def draw(self):
+        x, y = self.pos.x - 16, self.pos.y - 16
+        self.game.screen.blit(
+        self.imgs[self.cur_frame], (x, y))

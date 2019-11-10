@@ -23,6 +23,7 @@ class Game(object):
 
         self.player = None
         self.enemies = None
+        self.explo = None
         self.boss = None
         self.tiles = None
         self.obstacles = None
@@ -158,28 +159,28 @@ class Game(object):
         
         #TURRET
         turret_n = [
-            pygame.image.load("img/hazards_and_enemies/gorpig/gorpig_back.png")
+            pygame.image.load("img/hazards_and_enemies/gorpig/gorpig_back.png").convert_alpha()
         ]
         turret_ne = [
-            pygame.image.load("img/hazards_and_enemies/gorpig/gorpig_diagonal_up.png")
+            pygame.image.load("img/hazards_and_enemies/gorpig/gorpig_diagonal_up.png").convert_alpha()
         ]
         turret_e = [
-            pygame.image.load("img/hazards_and_enemies/gorpig/gorpig_right.png")
+            pygame.image.load("img/hazards_and_enemies/gorpig/gorpig_right.png").convert_alpha()
         ]
         turret_se = [
-            pygame.image.load("img/hazards_and_enemies/gorpig/gorpig_diagonal_down.png")
+            pygame.image.load("img/hazards_and_enemies/gorpig/gorpig_diagonal_down.png").convert_alpha()
         ]
         turret_s = [
-            pygame.image.load("img/hazards_and_enemies/gorpig/gorpig_front.png")
+            pygame.image.load("img/hazards_and_enemies/gorpig/gorpig_front.png").convert_alpha()
         ]
         turret_sw = [
-            pygame.image.load("img/hazards_and_enemies/gorpig/gorpig_diagonal_down.png")
+            pygame.image.load("img/hazards_and_enemies/gorpig/gorpig_diagonal_down.png").convert_alpha()
         ]
         turret_w = [
-            pygame.image.load("img/hazards_and_enemies/gorpig/gorpig_right.png")
+            pygame.image.load("img/hazards_and_enemies/gorpig/gorpig_right.png").convert_alpha()
         ]
         turret_nw = [
-            pygame.image.load("img/hazards_and_enemies/gorpig/gorpig_diagonal_up.png")
+            pygame.image.load("img/hazards_and_enemies/gorpig/gorpig_diagonal_up.png").convert_alpha()
         ]
         turret_sw = [
             pygame.transform.flip(img, True, False) for img in turret_se]
@@ -196,6 +197,14 @@ class Game(object):
             (-1,  1): turret_sw,
             (-1,  0): turret_w,
             (-1, -1): turret_nw}
+        #explosion
+        self.explosion = [
+            pygame.image.load("img/hazards_and_enemies/pink_bomber_explosion/p_explosion_1.png").convert_alpha(),
+            pygame.image.load("img/hazards_and_enemies/pink_bomber_explosion/p_explosion_2.png").convert_alpha(),
+            pygame.image.load("img/hazards_and_enemies/pink_bomber_explosion/p_explosion_3.png").convert_alpha(),
+            pygame.image.load("img/hazards_and_enemies/pink_bomber_explosion/p_explosion_4.png").convert_alpha(),
+        ]
+        
         # BULLETS
         self.player_bullet_img = pygame.image.load(
             "img/player/player_bullet.png").convert_alpha()
@@ -251,6 +260,7 @@ class Game(object):
             self.playing = False
 
         self.enemies[:] = [e for e in self.enemies if e.update() == True]
+        self.explo[:] = [e for e in self.explo if e.update() == True]
         if not self.doors_open and len(self.enemies) == 0:
             self.obstacles[:] = [t for t in self.obstacles if t.type != "door"]
             for i, t in enumerate(self.tiles):
@@ -282,7 +292,8 @@ class Game(object):
 
         for e in self.enemies:
             e.draw()
-
+        for e in self.explo:
+            e.draw()
         pygame.display.flip()
 
     def draw_text(self, text, font, color, pos, align="topleft"):
@@ -364,6 +375,7 @@ class Game(object):
 
         self.cur_room = 0
         self.enemies = []
+        self.explo = []
         self.load_room()
 
     def run(self):
@@ -431,7 +443,7 @@ if __name__ == "__main__":
         g.show_start_screen()
         g.new()
         g.run()
-        if self.win:
+        if g.win:
             g.show_win_screen()
         else:
             g.show_game_over_screen()
