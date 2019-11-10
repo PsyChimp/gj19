@@ -9,7 +9,6 @@ from globals import *
 
 class Game(object):
     def __init__(self):
-        sys.setrecursionlimit(2000)
         pygame.init()
         self.screen = pygame.display.set_mode((WIN_WIDTH_PX, WIN_HEIGHT_PX))
         pygame.display.set_caption(TITLE)
@@ -190,7 +189,7 @@ class Game(object):
         self.player = player.Player(self)
 
         self.enemies = []
-        # self.enemies.append(enemy.Enemy(self))
+        self.enemies.append(enemy.Enemy(self))
         
     def run(self):
         self.playing = True
@@ -241,7 +240,7 @@ class Game(object):
                 waiting = False
 
     def get_tile_pos(self, pos):
-        return (pos.x // TILE_SIZE, pos.y // TILE_SIZE)
+        return (int(pos.x / TILE_SIZE), int(pos.y / TILE_SIZE))
 
 if __name__ == "__main__":
     g = Game()
