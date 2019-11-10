@@ -3,7 +3,6 @@ from pygame.locals import *
 import random
 
 
-
 class Button(object):
     def __init__(self, rect, colors, font, text, on_click, *args):
 
@@ -33,7 +32,7 @@ class Button(object):
             self.state = "default"
 
     def draw(self, surface, image):
-        pygame.draw.rect(surface, self.colors[self.state], self.rect,6)
+        pygame.draw.rect(surface, self.colors[self.state], self.rect, 6)
         surface.blit(image, self.rect)
         if self.state == "hovered":
             pygame.draw.rect(surface, (24, 37, 46), self.rect)
@@ -44,11 +43,9 @@ if __name__ == "__main__":
     def foo():
         print("bar")
 
+
     pygame.init()
     counter = 0
-
-
-
 
     screen = pygame.display.set_mode((518, 230))
     background = pygame.image.load("./img/ui/Item Boxes.png")
@@ -78,15 +75,15 @@ if __name__ == "__main__":
     j = random.randint(0, 11)
     w = random.randint(0, 11)
     if i == j:
-        while i == j:
+        while j == w or i == j or i == w:
             i = random.randint(0, 11)
             j = random.randint(0, 11)
     elif i == w:
-        while i == w:
+        while j == w or i == j or i == w:
             i = random.randint(0, 11)
             w = random.randint(0, 11)
     elif j == w:
-        while j == w:
+        while j == w or i == j or i == w:
             j = random.randint(0, 11)
             w = random.randint(0, 11)
     numbers = [
@@ -179,7 +176,6 @@ if __name__ == "__main__":
         Button(pygame.Rect(192, 64, 128, 128), colors, font, text2, foo),
         Button(pygame.Rect(352, 64, 128, 128), colors, font, text3, foo)]
 
-
     while True:
         e = pygame.event.poll()
         if e.type == QUIT:
@@ -192,7 +188,7 @@ if __name__ == "__main__":
             b.handle_event(e)
 
         screen.fill((255, 255, 255))
-        screen.blit(background,(0,0))
+        screen.blit(background, (0, 0))
 
         for b in buttons:
             b.draw(screen, icons[numbers[counter]])
