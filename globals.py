@@ -14,7 +14,9 @@ PLAYER_SPAWN = (WIN_WIDTH_PX / 2, WIN_HEIGHT_PX / 2)
 
 ENEMY_MAX_HEALTH = 10
 ENEMY_SPEED = 50
+ENEMY_ANIM_DELAY = 0.2
 ENEMY_ATTACK_DELAY = 1.0
+ENEMY_SPIN_DELAY = 0.2
 ENEMY_AGGRO_RADIUS = 6
 
 BULLET_SPEED = 400
@@ -24,7 +26,7 @@ ROOMS = [
         "@@@_@@@@@@@@@@@@_@@@",
         "@..................@",
         "@..................@",
-        "@.........T........@",
+        "@.........E........@",
         "@..................@",
         "@..................@",
         "@..................@",
