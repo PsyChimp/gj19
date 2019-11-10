@@ -91,6 +91,7 @@ class Game(object):
             (-1,  1): player_walk_sw,
             (-1,  0): player_walk_w,
             (-1, -1): player_walk_nw}
+        self.player_bullet_img = pygame.image.load("img/player/player_bullet.png").convert_alpha()
 
     def handle_events(self):
         self.events = pygame.event.get()
@@ -159,6 +160,7 @@ class Game(object):
         if self.cur_room >= len(ROOMS):
             self.playing = False
             return
+        self.player.bullets.clear()
         self.tiles = []
         self.obstacles = []
         y = 0
