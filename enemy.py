@@ -103,7 +103,6 @@ class Enemy(object):
                     dirs = self.card_dirs
                 else:
                     dirs = self.diag_dirs
-                print(dirs)
                 self.cardinal = not self.cardinal
                 for d in dirs:
                     self.bullets.append(bullet.Bullet(
@@ -115,8 +114,8 @@ class Enemy(object):
         x, y = self.pos.x - 16, self.pos.y - 16
         #for k in self.came_from.keys():
             #pygame.draw.circle(self.game.screen, BLUE, tuple(map(lambda x:int((x * 32) + 16),k)), 10)
-        for p in self.path:
-            pygame.draw.circle(self.game.screen, WHITE, tuple(map(int,p)), 3)
+        #for p in self.path:
+            #pygame.draw.circle(self.game.screen, WHITE, tuple(map(int,p)), 3)
         if self.turret:
             pygame.draw.rect(self.game.screen, GREEN, (x, y, 32, 32))
         else:
