@@ -34,6 +34,7 @@ class Game(object):
         self.playing = False
         self.paused = False
         self.debug = False
+        self.win = False
 
         # For debugging
         self.tmpfont16 = pygame.font.Font(None, 16)
@@ -194,6 +195,9 @@ class Game(object):
             self.doors_open = True
 
         self.boss.update()
+        if self.boss.hp <= 0:
+            self.playing = False
+            self.win = True
 
         # Check for player entering a door
         if self.player.pos.y < TILE_SIZE:
@@ -290,7 +294,6 @@ class Game(object):
         self.enemies = []
         self.load_room()
 
-        
     def run(self):
         self.playing = True
         # pygame.mixer.music.load("snd/level_theme.ogg")
@@ -314,6 +317,15 @@ class Game(object):
             "Press any key to begin!", self.tmpfont64, WHITE,
             (WIN_WIDTH_PX / 2, WIN_HEIGHT_PX / 2), "center")
         pygame.display.flip()
+        self.wait_for_key()
+
+    def show_win_screen(self):
+        self.screen.fill(BLUE)
+        self.draw_text(
+            "You win!", self.tmpfont64, WHITE,
+            (WIN_WIDTH_PX / 2, WIN_HEIGHT_PX / 2), "center")
+        pygame.display.flip()
+        pygame.time.wait(3000)
         self.wait_for_key()
 
     def show_game_over_screen(self):
@@ -347,5 +359,8 @@ if __name__ == "__main__":
         g.show_start_screen()
         g.new()
         g.run()
-        g.show_game_over_screen()
+        if self.win:
+            g.show_win_screen()
+        else:
+            g.show_game_over_screen()
         g.quit()
