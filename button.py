@@ -5,6 +5,7 @@ from downgrade import *
 
 
 
+
 class Button(object):
     def __init__(self,  rect, colors, font, text, on_click, *args):
 
@@ -167,6 +168,10 @@ if __name__ == "__main__":
             print(text3)
 
 
+    icon2 = pygame.image.load("./img/icons/1hp_big.png")
+    icon5 = pygame.image.load("./img/icons/slow_mov_speed_big.png")
+    icon10 = pygame.image.load("./img/icons/plus_enemy_health_big.png")
+    icon11 = pygame.image.load("./img/icons/plus_enemy_speed_big.png")
     pygame.init()
     counter = 0
 

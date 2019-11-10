@@ -390,6 +390,7 @@ class Game(object):
             self.load_room()
 
     def draw(self):
+        counter = 0
         for t in self.tiles:
             t.draw()
             if self.debug:
@@ -404,6 +405,10 @@ class Game(object):
             e.draw()
         for e in self.explo:
             e.draw()
+        for d in self.downgrades:
+            if d.activated:
+                self.screen.blit(d.img, ((32 * counter), (0)))
+                counter += 1
         pygame.display.flip()
 
     def draw_text(self, text, font, color, pos, align="topleft"):
