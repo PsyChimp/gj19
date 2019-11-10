@@ -42,6 +42,7 @@ class Game(object):
         self.missing_frame.fill(MAGENTA)
 
         # Load images, sounds, fonts, etc.
+        # ROOM TILES
         self.room_tiles = {
             "floor": pygame.image.load("img/level/floor.png").convert(),
             "wall_top_left": pygame.image.load("img/level/wall_top_left.png").convert(),
@@ -56,6 +57,7 @@ class Game(object):
             "door_open": pygame.image.load("img/level/door_open.png").convert(),
             "door_closed": pygame.image.load("img/level/door_closed.png").convert()}
 
+        # PLAYER
         player_walk_n = [
             pygame.image.load("img/player/player_walk_n1.png").convert_alpha(),
             pygame.image.load("img/player/player_walk_n2.png").convert_alpha(),
@@ -91,7 +93,12 @@ class Game(object):
             (-1,  1): player_walk_sw,
             (-1,  0): player_walk_w,
             (-1, -1): player_walk_nw}
-        self.player_bullet_img = pygame.image.load("img/player/player_bullet.png").convert_alpha()
+
+        # BULLETS
+        self.player_bullet_img = pygame.image.load(
+            "img/player/player_bullet.png").convert_alpha()
+        self.enemy_bullet_img = pygame.image.load(
+            "img/hazards_and_enemies/enemy_bullet.png").convert_alpha()
 
     def handle_events(self):
         self.events = pygame.event.get()

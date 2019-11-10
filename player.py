@@ -12,7 +12,7 @@ class Player(object):
         self.dir = pygame.math.Vector2(0, 0)
         self.prev_dir = pygame.math.Vector2(0, 1)
         self.atk_dir = pygame.math.Vector2(0, 0)
-        self.sprites = self.game.player_imgs
+        self.imgs = self.game.player_imgs
         self.radius = 16
         self.hp = PLAYER_MAX_HEALTH
         self.can_move_x = True
@@ -92,10 +92,10 @@ class Player(object):
         x, y = self.pos.x - 16, self.pos.y - 16
         if self.dir.x != 0 or self.dir.y != 0:
             self.game.screen.blit(
-                self.sprites[tuple(self.dir)][self.cur_frame], (x, y))
+                self.imgs[tuple(self.dir)][self.cur_frame], (x, y))
         else:
             self.game.screen.blit(
-                self.sprites[tuple(self.prev_dir)][2], (x, y))
+                self.imgs[tuple(self.prev_dir)][2], (x, y))
         if self.game.debug:
             pygame.draw.rect(
                 self.game.screen, WHITE, (x, y, TILE_SIZE, TILE_SIZE), 1)
