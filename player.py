@@ -21,17 +21,19 @@ class Player(object):
         pass
 
     def update(self):
-        # Update velocity
+        # Update direction
         self.dir.x = (self.game.keys[K_d] - self.game.keys[K_a])
         self.dir.y = (self.game.keys[K_s] - self.game.keys[K_w])
         if self.dir.x != 0 or self.dir.y != 0:
             self.prev_dir = pygame.math.Vector2(self.dir)
+            # Update animation
             self.anim_timer += self.game.delta
             if self.anim_timer >= PLAYER_ANIM_DELAY:
                 num_frames = len(self.sprites[tuple(self.dir)])
                 self.cur_frame = (self.cur_frame + 1) % 2
                 self.anim_timer = 0.0
         else:
+            self.anim_timer = 0.0
             self.cur_frame = 0
 
         # Calculate new position
