@@ -190,7 +190,7 @@ class Game(object):
         self.player = player.Player(self)
 
         self.enemies = []
-        # self.enemies.append(enemy.Enemy(self))
+        self.enemies.append(enemy.Enemy(self))
         
     def run(self):
         self.playing = True
