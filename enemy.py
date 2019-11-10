@@ -27,7 +27,7 @@ class Enemy(object):
         self.player_pos = self.get_player_tile_pos()
         self.path = []
         self.d_point = self.pos
-        self.hp = 1
+        self.hp = ENEMY_MAX_HEALTH
         self.turret = turret
         if self.turret:
             self.dir = pygame.math.Vector2(0, 1)
