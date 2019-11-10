@@ -3,8 +3,9 @@ import sys
 import pygame
 from pygame.locals import *
 
-import player
 import enemy
+import player
+import tile
 from globals import *
 
 class Game(object):
@@ -20,7 +21,7 @@ class Game(object):
 
         self.player = None
         self.enemies = None
-        self.walls = None
+        self.tiles = None
         self.door = None
 
         self.events = None
@@ -119,20 +120,36 @@ class Game(object):
         self.mbut = pygame.mouse.get_pressed()
 
         self.player.update()
-        for e in self.enemies:
-            e.update()
         if self.player.hp <= 0:
             self.playing = False
 
-    def draw(self):
-        self.screen.blit(self.background, (0, 0))
-        if self.debug:
-            for w in self.walls:
-                pygame.draw.rect(self.screen, RED, w, 1)
-        self.player.draw()
         for e in self.enemies:
-            e.draw()
-        pygame.display.flip()
+            e.update()
+        if len(self.enemies) == 0:
+            # Room has been cleared
+            
+
+    def draw(self):
+        # self.screen.blit(self.background, (0, 0))
+        # if self.debug:
+            # for w in self.walls:
+                # pygame.draw.rect(self.screen, RED, w, 1)
+        # # Draw open doors
+        # if self.room_clear:
+            # self.background.blit(self.room_tiles["door_open"], (96, 0))
+            # self.background.blit(self.room_tiles["door_open"], (512, 0))
+
+        # self.player.draw()
+
+        # for e in self.enemies:
+            # e.draw()
+
+        # pygame.display.flip()
+
+        for t in self.tiles:
+            t.draw()
+            if self.debug:
+                pygame.draw.rect(self.screen, RED, t.rect, 1)
 
     def draw_text(self, text, font, color, pos, align="topleft"):
         text_surf = font.render(text, True, color)
@@ -140,15 +157,14 @@ class Game(object):
         self.screen.blit(text_surf, text_rect)
 
     def load_room(self):
-        self.background = pygame.Surface((WIN_WIDTH_PX, WIN_HEIGHT_PX))
-        self.walls = []
+        self.tiles = []
         y = 0
         for row in ROOMS[self.cur_room]:
             x = 0
             for tile in row:
-                if tile == "W":
-                    self.walls.append(Rect(
-                        x * TILE_SIZE, y * TILE_SIZE, TILE_SIZE, TILE_SIZE))
+                rect = Rect(x * TILE_SIZE, y * TILE_SIZE, TILE_SIZE, TILE_SIZE)
+                if tile == "@":
+                    type = "wall"
                     if y == 0:
                         if x == 0:
                             img = self.room_tiles["wall_top_left"]
@@ -170,15 +186,17 @@ class Game(object):
                             img = self.room_tiles["wall_right"]
                         else:
                             img = self.room_tiles["wall_square"]
-                elif tile == "D":
+                elif tile == "_":
+                    type = "door"
                     if y == 0:
                         img = self.room_tiles["door_closed"]
                     elif y == WIN_HEIGHT_T - 1:
                         img = pygame.transform.flip(
                             self.room_tiles["door_closed"], False, True)
                 elif tile == ".":
+                    type = "floor"
                     img = self.room_tiles["floor"]
-                self.background.blit(img, (x * TILE_SIZE, y * TILE_SIZE))
+                self.tiles.append(tile.Tile(self, type, rect, img)
                 x += 1
             y += 1
 
@@ -190,7 +208,7 @@ class Game(object):
         self.player = player.Player(self)
 
         self.enemies = []
-        # self.enemies.append(enemy.Enemy(self))
+        self.enemies.append(enemy.Enemy(self))
         
     def run(self):
         self.playing = True
