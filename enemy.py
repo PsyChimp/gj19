@@ -17,6 +17,7 @@ class Enemy(object):
         self.can_move_x = True
         self.can_move_y = True
         self.direction = pygame.math.Vector2(random.uniform(-1, 1), random.uniform(-1, 1))
+        self.prev_direction = pygame.math.Vector2(0, 1)
         
     def betweenRange(self, x, r1, r2):
         return (x >= r1) and (x <= r2)
@@ -38,6 +39,12 @@ class Enemy(object):
         #print(self.vel)
         if self.vel.magnitude() > 1:
             self.vel = self.vel.normalize() * (PLAYER_SPEED / 2)
+        
+        self.direction.x = (self.game.player.pos[0] - self.pos[0])
+        self.direction.y = (self.game.player.pos[1] - self.pos[1])
+        if self.direction.x != 0 or self.direction.y != 0:
+            self.prev_direction = pygame.math.Vector2(self.direction)
+        print(self.direction)
             
         # Calculate new position
         new_pos = self.pos + (self.vel * self.game.delta)
