@@ -8,9 +8,10 @@ from globals import *
 from queue import *
 
 class Enemy(object):
-    def __init__(self,game):
+    def __init__(self,game,tile_pos):
         self.game = game
-        self.pos = pygame.math.Vector2(WIN_WIDTH_PX / 2, WIN_HEIGHT_PX / 2)
+        self.pos = pygame.math.Vector2((tile_pos[0] * TILE_SIZE) + (TILE_SIZE/2),
+        (tile_pos[1] * TILE_SIZE) + (TILE_SIZE/2))
         self.vel = pygame.math.Vector2(0, 0)
         #self.img = self.game.player_img
         self.radius = 10
@@ -22,7 +23,6 @@ class Enemy(object):
         self.path = []
         self.d_point = self.pos
         self.hp = 1
-        self.came_from = {}
     def betweenRange(self, x, r1, r2):
         return (x >= r1) and (x <= r2)
         
@@ -66,11 +66,12 @@ class Enemy(object):
             self.radius * 2)
 
         # Check for collisions with walls
-        for w in self.game.walls:
-            if self.can_move_x and new_xrect.colliderect(w):
+        for tile in self.game.obstacles:
+            if self.can_move_x and new_xrect.colliderect(tile.rect):
                 self.can_move_x = False
-            if self.can_move_y and new_yrect.colliderect(w):
+            if self.can_move_y and new_yrect.colliderect(tile.rect):
                 self.can_move_y = False
+                
         # Update position
         if self.can_move_x:
             self.pos.x = new_pos.x
@@ -80,8 +81,8 @@ class Enemy(object):
         
     def draw(self):
         x, y = self.pos.x - 16, self.pos.y - 16
-        for k in self.came_from.keys():
-            pygame.draw.circle(self.game.screen, BLUE, tuple(map(lambda x:int((x * 32) + 16),k)), 10)
+        #for k in self.came_from.keys():
+            #pygame.draw.circle(self.game.screen, BLUE, tuple(map(lambda x:int((x * 32) + 16),k)), 10)
         for p in self.path:
             pygame.draw.circle(self.game.screen, WHITE, tuple(map(int,p)), 3)
         
@@ -122,6 +123,8 @@ class Enemy(object):
         return neighbors
         
     def get_path_to_tile(self,start,end):
+        if(start == end):
+            return [end]
         frontier = Queue()
         frontier.put(start)
         self.came_from = {}
@@ -140,7 +143,10 @@ class Enemy(object):
         path = []
         while current != start:
             path.append(current)
-            current = self.came_from[current]
+            if(current in self.came_from):
+                current = self.came_from[current]
+            else:
+                break
         path.reverse()
         return path
         

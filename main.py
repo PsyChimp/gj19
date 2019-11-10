@@ -202,6 +202,10 @@ class Game(object):
                 elif cur_tile == ".":
                     type = "floor"
                     img = self.room_tiles["floor"]
+                elif cur_tile == "E":
+                    self.enemies.append(enemy.Enemy(self,(x,y)))
+                    type = "floor"
+                    img = self.room_tiles["floor"]
                 self.tiles.append(tile.Tile(self, type, rect, img))
                 x += 1
             y += 1
@@ -215,10 +219,9 @@ class Game(object):
         self.player = player.Player(self)
 
         self.cur_room = 0
+        self.enemies = []
         self.load_room()
 
-        self.enemies = []
-        # self.enemies.append(enemy.Enemy(self))
         
     def run(self):
         self.playing = True
