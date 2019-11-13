@@ -116,7 +116,7 @@ class Game(object):
     MAGENTA = (255, 0, 255)
     def __init__(self):
         pygame.init()
-        self.screen = pygame.display.set_mode((Game.WIN_WIDTH_PX, Game.WIN_HEIGHT_PX))
+        self.screen = pygame.display.set_mode((Game.WIN_WIDTH_PX, Game.WIN_HEIGHT_PX), FULLSCREEN)
         pygame.display.set_caption(Game.TITLE)
         self.clock = pygame.time.Clock()
 
@@ -336,8 +336,8 @@ class Game(object):
                 "img/hazards_and_enemies/boss_hands_animation/hand_0003.png").convert_alpha()]
         
         #downgrades
-        self.downgrades = [downgrade.EnemyHPDowngrade(self), downgrade.MoveSpeedDowngrade(self),
-                           downgrade.EnemySpeedDowngrade(self), downgrade.OneHPDowngrade(self)]
+        self.downgrades = [downgrade.EnemyHPDowngrade(self), downgrade.EnemySpeedDowngrade(self)
+                            , downgrade.MoveSpeedDowngrade(self), downgrade.OneHPDowngrade(self)]
 
     def handle_events(self):
         self.events = pygame.event.get()
